@@ -43,8 +43,8 @@ public class PlayCard extends DrawCard {
         }
 
         // remove the card from the players hand to the playedDeck
-        wgs.getPlayerHand(gameState.getCurrentPlayer()).remove(card);
-        wgs.getPlayedCards(gameState.getCurrentPlayer()).add(card);
+        wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
+        wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
         return true;
     }
 

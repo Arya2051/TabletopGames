@@ -53,6 +53,13 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
+        //DEBUGGING
+        System.out.println("----------------------------------------- PLAYER " +wgs.getCurrentPlayer() + " TURN -----------------------------------------");
+        System.out.println("Number of cards in players hands: ");
+        for (int i=0;i< wgs.getNPlayers();i++){
+            System.out.println(wgs.getPlayerHand(i).getSize()+" --> "+wgs.getPlayerHand(i).toString());
+        }
+        System.out.println(action.getString(wgs)); // SAYS WHAT ACTION HAPPENED!
         action.execute(wgs); //Apply the given action to the game state. This logic should be in the AbstractAction.execute() method, which well get to later, so this should be as simple as action.execute(state)
         wgs.getTurnOrder().endPlayerTurn(wgs); // Move to the next player (if required, and if the game has not ended). This is usually achieved with state.getTurnOrder().endPlayerTurn(state), with this logic encapsulated in FoobarTurnOrder.
         checkAgeEnd(wgs); // Check for game end;
@@ -64,13 +71,13 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         ArrayList<AbstractAction> actions = new ArrayList<>();
 
         // All playable cards in player hand
-        for (int i=0; i<wgs.getPlayerHand(gameState.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
             if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isPlayable(wgs)){
                 actions.add(new PlayCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); // Adds the card
             }
         }
         // All discard-able cards in player hand
-        for (int i=0; i<wgs.getPlayerHand(gameState.getCurrentPlayer()).getSize(); i++){
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){
             actions.add(new DiscardCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); //
         }
         return actions;
@@ -173,14 +180,17 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             }
 
             wgs.setGameStatus(Utils.GameResult.GAME_END); // CHANGE THE NUMBER!!!
-            System.out.println("FINAL AGE HAS ENDED!!!!!!!!!!!!!");
+            System.out.println("----------------------------------------- THE FINAL AGE HAS ENDED!!! -----------------------------------------");
             System.out.println("The winner is Player  " + winner +"!!!!");
         }
     }
 
     @Override
     protected void endGame(AbstractGameState gameState) {
-        //
+        Wonders7GameState wgs = (Wonders7GameState) gameState;
+        for (int i=0;i< gameState.getNPlayers();i++){
+            System.out.println("Number of victory points for the player " + i + " is: " + wgs.getPlayerResources(i).get(Wonder7Card.resources.victory));
+        }
     }
     // You may override the endGame() method if your game requires any extra end of game computation (e.g. to update the status of players still in the game to winners).
     // !!!

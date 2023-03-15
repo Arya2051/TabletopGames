@@ -15,7 +15,10 @@ public class DiscardCard extends DrawCard {
         this.cardName = cardName;
     }
 
-    public boolean execute(Wonders7GameState wgs){
+    public boolean execute(AbstractGameState gameState){
+        super.execute(gameState);
+        Wonders7GameState wgs = (Wonders7GameState) gameState;
+
         // Finds card being removed in player Hand
         int index=0; // The index of the card in hand
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
@@ -28,7 +31,8 @@ public class DiscardCard extends DrawCard {
         // Player gets 3 coins from discarding card
         int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonder7Card.resources.coin); // No. Coins player has
         wgs.getPlayerResources(wgs.getCurrentPlayer()).put(Wonder7Card.resources.coin,  playerValue+3); // Adds 3 coins to player coin count
-        // Removes card from hand and adds to discarded cards deck
+
+        // Removes card from player hand and adds to discarded cards deck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card); // remove
         wgs.getDiscardedCards().add(card); // add
 
@@ -38,7 +42,7 @@ public class DiscardCard extends DrawCard {
 
 
     public String toString() {
-        return "Played card " + cardName;
+        return "Discard card " + cardName;
     }
 
     @Override

@@ -102,19 +102,19 @@ public class Wonder7Card extends Card {
         // ADD COSTS
         switch (type) {
             case RawMaterials:
-                return  "raw materials" + " " + cardName;
+                return  "raw materials:" + " " + cardName;
             case ManufacturedGoods:
-                return  "manufactured goods" + " " + cardName;
+                return  "manufactured goods:" + " " + cardName;
             case CivilianStructures:
-                return  "civilian structure" + " " + cardName ;
+                return  "civilian structure:" + " " + cardName ;
             case ScientificStructures:
-                return "scientific structure" + " " + cardName;
+                return "scientific structure:" + " " + cardName;
             case CommercialStructures:
-                return "commercial structure" + " " + cardName;
+                return "commercial structure:" + " " + cardName;
             case MilitaryStructures:
-                return "military structure" + " " + cardName;
+                return "military structure:" + " " + cardName;
             case Guilds:
-                return "guild" + " " + cardName;
+                return "guild:" + " " + cardName;
         }
         return null;
     }
