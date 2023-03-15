@@ -22,6 +22,7 @@ import games.terraformingmars.TMGameParameters;
 import games.tictactoe.TicTacToeGameParameters;
 import games.uno.UnoGameParameters;
 import games.virus.VirusGameParameters;
+import games.wonders7.Wonders7GameParameters;
 
 public class ParameterFactory {
 
@@ -71,6 +72,8 @@ public class ParameterFactory {
                 return new TMGameParameters(seed);
             case CantStop:
                 return new CantStopParameters(seed);
+            case Wonders7:
+                return new Wonders7GameParameters(seed);
         }
         throw new AssertionError("No default Parameters specified for Game " + game);
 
