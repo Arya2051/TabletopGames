@@ -1,9 +1,11 @@
 package games.wonders7.actions;
 
+import core.AbstractGameState;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7GameState;
 import games.wonders7.cards.Wonder7Card;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class DiscardCard extends DrawCard {
@@ -21,7 +23,7 @@ public class DiscardCard extends DrawCard {
                 index = i;
             }
         }
-        Wonder7Card card = wgs.getAgeDeck().get(index); // Card being removed
+        Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being removed
 
         // Player gets 3 coins from discarding card
         int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonder7Card.resources.coin); // No. Coins player has
@@ -34,4 +36,27 @@ public class DiscardCard extends DrawCard {
     }
 
 
+
+    public String toString() {
+        return "Played card " + cardName;
+    }
+
+    @Override
+    public String getString(AbstractGameState gameState) {
+        return toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Wonder7Card)) return false;
+        if (!super.equals(o)) return false;
+        DiscardCard discardCard = (DiscardCard) o;
+        return Objects.equals(cardName, discardCard.cardName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(),cardName);
+    }
 }

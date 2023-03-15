@@ -75,9 +75,16 @@ public class Wonders7GameState extends AbstractGameState {
         copy.playerHand = new ArrayList<>();
         copy.playedCards = new ArrayList<>();
 
-        copy.playerResources.addAll(playerResources);
-        copy.playerHand.addAll(playerHand);
-        copy.playedCards.addAll(playedCards);
+        for (HashMap<Wonder7Card.resources, Integer> map: playerResources) {
+            copy.playerResources.add(new HashMap<>(map));
+        }
+        for (Deck<Wonder7Card> deck: playerHand) {
+            copy.playerHand.add(deck.copy());
+        }
+        for (Deck<Wonder7Card> deck: playedCards) {
+            copy.playedCards.add(deck.copy());
+        }
+
         copy.AgeDeck = AgeDeck.copy();
         copy.discardedCards = discardedCards.copy();
         copy.currentAge = currentAge;

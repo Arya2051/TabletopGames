@@ -81,9 +81,21 @@ public class Wonder7Card extends Card {
         this.type = type;
         this.nPlayers = nPlayers;
         this.age = age;
-        this.constructionCost = empty();
+        this.constructionCost = empty(); // Card costs nothing
         this.manufacturedGoods = manufacturedGoods;
     }
+
+    protected Wonder7Card(String name, Wonder7CardType type,  int nPlayers, int age, HashMap<resources,Integer> constructionCost, HashMap<resources,Integer> manufacturedGoods, int componentID){
+        super(name, componentID);
+        this.cardName = name;
+        this.type = type;
+        this.nPlayers = nPlayers;
+        this.age = age;
+        this.constructionCost = constructionCost;
+        this.manufacturedGoods = manufacturedGoods;
+    }
+
+
 
     @Override
     public String toString() {
@@ -94,23 +106,28 @@ public class Wonder7Card extends Card {
             case ManufacturedGoods:
                 return  "manufactured goods" + " " + cardName;
             case CivilianStructures:
-                return  "civilian structures" + " " + cardName ;
+                return  "civilian structure" + " " + cardName ;
             case ScientificStructures:
-                return "scientific structures" + " " + cardName;
+                return "scientific structure" + " " + cardName;
             case CommercialStructures:
-                return "commercial structures" + " " + cardName;
+                return "commercial structure" + " " + cardName;
             case MilitaryStructures:
-                return "military structures" + " " + cardName;
+                return "military structure" + " " + cardName;
             case Guilds:
-                return "guilds" + " " + cardName;
+                return "guild" + " " + cardName;
         }
         return null;
+    }
+
+    @Override
+    public Wonder7Card copy(){
+        return new Wonder7Card(cardName, type, nPlayers, age, constructionCost, manufacturedGoods,componentID);
     }
 
     // Checks if player can pay the cost of the card
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
-        Set<resources> key = manufacturedGoods.keySet(); //Gets the resources of the player
+        Set<resources> key = constructionCost.keySet(); //Gets the resources of the player
         for (resources resource : key) {// Goes through every resource the player has
             if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCost.get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e the player can afford the card)
                 return false; // Player cant afford card
@@ -136,5 +153,8 @@ public class Wonder7Card extends Card {
         empty.put(Wonder7Card.resources.coin, 0);
         return empty;
     }
+
+
+
 }
 

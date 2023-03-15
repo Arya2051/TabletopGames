@@ -156,7 +156,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                 wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.cog),2));
                 wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.compass),2));
                 wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.tablet),2));
-                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, 7*Math.min(Math.min(wgs.getPlayerResources(i).get(Wonder7Card.resources.cog),wgs.getPlayerResources(i).get(Wonder7Card.resources.compass)),wgs.getPlayerResources(i).get(Wonder7Card.resources.tablet))); // Sets of different science symbols
+                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+7*Math.min(Math.min(wgs.getPlayerResources(i).get(Wonder7Card.resources.cog),wgs.getPlayerResources(i).get(Wonder7Card.resources.compass)),wgs.getPlayerResources(i).get(Wonder7Card.resources.tablet))); // Sets of different science symbols
 
             }
 
@@ -174,6 +174,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
             wgs.setGameStatus(Utils.GameResult.GAME_END); // CHANGE THE NUMBER!!!
             System.out.println("FINAL AGE HAS ENDED!!!!!!!!!!!!!");
+            System.out.println("The winner is Player  " + winner +"!!!!");
         }
     }
 

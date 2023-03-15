@@ -5,6 +5,7 @@ import core.actions.DrawCard;
 import games.wonders7.Wonders7GameState;
 import games.wonders7.cards.Wonder7Card;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class PlayCard extends DrawCard {
@@ -25,13 +26,13 @@ public class PlayCard extends DrawCard {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
         // Finds the played card
-        int index=0; // The index of the played card
-        for (int i=0; i<wgs.getAgeDeck().getSize(); i++){ // Goes through each card in the drawDeck/AgeDeck
-            if (cardName.equals(wgs.getAgeDeck().get(i).cardName)){ // If cardName is the one searching for (being played)
+        int index=0; // The index of the card in hand
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
+            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
                 index = i;
             }
         }
-        Wonder7Card card = wgs.getAgeDeck().get(index);
+        Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being
 
         // Adds the resources the played card provides to player's resources
         Set<Wonder7Card.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
@@ -44,8 +45,29 @@ public class PlayCard extends DrawCard {
         // remove the card from the players hand to the playedDeck
         wgs.getPlayerHand(gameState.getCurrentPlayer()).remove(card);
         wgs.getPlayedCards(gameState.getCurrentPlayer()).add(card);
-
         return true;
     }
 
+    public String toString() {
+        return "Played card " + cardName;
+    }
+
+    @Override
+    public String getString(AbstractGameState gameState) {
+        return toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Wonder7Card)) return false;
+        if (!super.equals(o)) return false;
+        PlayCard playCard = (PlayCard) o;
+        return Objects.equals(cardName, playCard.cardName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), cardName);
+    }
 }

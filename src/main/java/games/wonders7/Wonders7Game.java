@@ -3,6 +3,7 @@ package games.wonders7;// wonders game class
 import core.*;
 import games.GameType;
 import players.simple.OSLAPlayer;
+import players.simple.RandomPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ class Wonders7Game extends Game {
         // ...use this for running the game either with or without a GUI. See any existing game for ideas here...
          AbstractParameters gameParameters = new Wonders7GameParameters(System.currentTimeMillis());
         ArrayList<AbstractPlayer> players = new ArrayList<>();
-        players.add(new OSLAPlayer());
-        players.add(new OSLAPlayer());
+        players.add(new RandomPlayer());
+        players.add(new RandomPlayer());
 
         Game game = new Wonders7Game(players, gameParameters);
         game.run();
