@@ -24,7 +24,7 @@ public class Wonders7GameState extends AbstractGameState {
     List<Deck<Wonder7Card>> playerHand; // 7 Cards player has to choose from
     List<Deck<Wonder7Card>> playedCards; // Player used cards
     Deck<Wonder7Card> AgeDeck; // The deck for Age 1, the 'draw deck'
-    Deck<Wonder7Card> discardedCards; // Discarded cards
+    Deck<Wonder7Card> discardPile; // Discarded cards
     //
 
 
@@ -86,7 +86,7 @@ public class Wonders7GameState extends AbstractGameState {
         }
 
         copy.AgeDeck = AgeDeck.copy();
-        copy.discardedCards = discardedCards.copy();
+        copy.discardPile = discardPile.copy();
         copy.currentAge = currentAge;
 
         return copy;
@@ -128,7 +128,7 @@ public class Wonders7GameState extends AbstractGameState {
 
     public Deck<Wonder7Card> getPlayedCards(int index){return playedCards.get(index);} // Get player 'played' cards
 
-    public Deck<Wonder7Card> getDiscardedCards(){return discardedCards;}
+    public Deck<Wonder7Card>  getDiscardPile(){return discardPile;}
 
     public List<HashMap<Wonder7Card.resources, Integer>> getAllPlayerResources(){return playerResources;} // Return all player's resources hashmap
 

@@ -34,7 +34,7 @@ public class DiscardCard extends DrawCard {
 
         // Removes card from player hand and adds to discarded cards deck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card); // remove
-        wgs.getDiscardedCards().add(card); // add
+        wgs.getDiscardPile().add(card); // add
 
         return true;
     }

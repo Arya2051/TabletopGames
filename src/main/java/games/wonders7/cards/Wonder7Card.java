@@ -129,7 +129,7 @@ public class Wonder7Card extends Card {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         Set<resources> key = constructionCost.keySet(); //Gets the resources of the player
         for (resources resource : key) {// Goes through every resource the player has
-            if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCost.get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e the player can afford the card)
+            if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCost.get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e. the player can afford the card)
                 return false; // Player cant afford card
             }
         }

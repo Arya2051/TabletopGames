@@ -31,7 +31,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         }
 
         // Cards that have been discarded all players
-        wgs.discardedCards = new Deck<Wonder7Card>("Discarded Cards", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
+        wgs.discardPile = new Deck<Wonder7Card>("Discarded Cards", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
 
         // Creates Age1 Deck and shuffle
         wgs.AgeDeck = new Deck<Wonder7Card>("Age 1 Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL); //Going
