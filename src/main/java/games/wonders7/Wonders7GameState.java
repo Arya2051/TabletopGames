@@ -3,6 +3,8 @@ package games.wonders7;// import core.interfaces.IfeatureRepresentation;
 
 import core.AbstractGameState;
 import core.AbstractParameters;
+import core.actions.AbstractAction;
+import core.actions.DrawCard;
 import core.components.Card;
 import core.components.Component;
 import core.components.Deck;
@@ -25,11 +27,11 @@ public class Wonders7GameState extends AbstractGameState {
     List<Deck<Wonder7Card>> playedCards; // Player used cards
     Deck<Wonder7Card> AgeDeck; // The deck for Age 1, the 'draw deck'
     Deck<Wonder7Card> discardPile; // Discarded cards
-    //
+    AbstractAction[] turnActions; // The round's actions chosen by each player
 
 
     public Wonders7GameState(AbstractParameters gameParameters, int nPlayers) {
-        super(gameParameters, new AlternatingTurnOrder(nPlayers), Wonders7);
+        super(gameParameters, new Wonders7TurnOrder(nPlayers), Wonders7);
         // Sets game in Age 1
         currentAge = 1;
 
@@ -129,6 +131,8 @@ public class Wonders7GameState extends AbstractGameState {
     public Deck<Wonder7Card> getPlayedCards(int index){return playedCards.get(index);} // Get player 'played' cards
 
     public Deck<Wonder7Card>  getDiscardPile(){return discardPile;}
+    public AbstractAction getTurnAction(int index){return turnActions[index];}
+    public void setTurnAction(int index, AbstractAction action){turnActions[index] = action;}
 
     public List<HashMap<Wonder7Card.resources, Integer>> getAllPlayerResources(){return playerResources;} // Return all player's resources hashmap
 

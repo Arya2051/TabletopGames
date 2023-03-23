@@ -8,6 +8,10 @@ class Wonders7TurnOrder extends AlternatingTurnOrder {
     // If the game has a simple alternating structure of each player taking their turn in order,
     // then you can just use AlternatingTurnOrder
 
+    Wonders7TurnOrder(int nPlayers){
+        super(nPlayers);
+    }
+
     @Override
     protected void _reset() {
 
@@ -16,7 +20,7 @@ class Wonders7TurnOrder extends AlternatingTurnOrder {
     @Override
     protected TurnOrder _copy() {
 
-        return new Wonders7TurnOrder();
+        return new Wonders7TurnOrder(nPlayers);
     }
 
 }

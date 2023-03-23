@@ -4,6 +4,7 @@ import core.AbstractGameState;
 import core.CoreConstants;
 import core.actions.AbstractAction;
 import core.components.Deck;
+import core.turnorders.AlternatingTurnOrder;
 import games.wonders7.actions.DiscardCard;
 import games.wonders7.actions.PlayCard;
 import games.wonders7.cards.Wonder7Card;
@@ -25,6 +26,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         // Sets up each player's hand and their played cards, and their resources
         wgs.playerHand = new ArrayList<>();
         wgs.playedCards = new ArrayList<>();
+        wgs.turnActions = new AbstractAction[wgs.getNPlayers()];
         for (int i=0; i<wgs.getNPlayers(); i++){
             wgs.playerHand.add(new Deck<>("Player hand" + i, i, CoreConstants.VisibilityMode.HIDDEN_TO_ALL));
             wgs.playedCards.add(new Deck<>("Played Cards", CoreConstants.VisibilityMode.VISIBLE_TO_ALL));
@@ -53,15 +55,30 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
-        //DEBUGGING
-        System.out.println("----------------------------------------- PLAYER " +wgs.getCurrentPlayer() + " TURN -----------------------------------------");
-        System.out.println("Number of cards in players hands: ");
-        for (int i=0;i< wgs.getNPlayers();i++){
-            System.out.println(wgs.getPlayerHand(i).getSize()+" --> "+wgs.getPlayerHand(i).toString());
+
+         if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
+             // DEBUGGING. PRINTS THE SIZE OF EVERY PLAYERS HAND AND ALL THE CARDS IN THEIR HANDS
+             System.out.println("Number of cards in players hands: ");
+             for (int i = 0; i < wgs.getNPlayers(); i++) {
+                 System.out.println(wgs.getPlayerHand(i).getSize() + " --> " + wgs.getPlayerHand(i).toString());
+             }
+         }
+
+         if (wgs.getTurnAction(wgs.getNPlayers()-1) == null) { // CHOOSE ACTIONS
+            wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
+            wgs.getTurnOrder().endPlayerTurn(wgs);
+
         }
-        System.out.println(action.getString(wgs)); // SAYS WHAT ACTION HAPPENED!
-        action.execute(wgs); //Apply the given action to the game state. This logic should be in the AbstractAction.execute() method, which well get to later, so this should be as simple as action.execute(state)
-        wgs.getTurnOrder().endPlayerTurn(wgs); // Move to the next player (if required, and if the game has not ended). This is usually achieved with state.getTurnOrder().endPlayerTurn(state), with this logic encapsulated in FoobarTurnOrder.
+        else if (wgs.getTurnAction(wgs.getNPlayers()-1) != null) { // ACTION ROUND
+            for (int i = 0; i < wgs.getNPlayers(); i++) {
+                wgs.getTurnOrder().setTurnOwner(i); // PLAYER i DOES THE ACTION THEY SELECTED, NOT ANOTHER PLAYERS ACTION
+                System.out.println("PLAYER " + wgs.getCurrentPlayer() + " PLAYED: " + wgs.getTurnAction(wgs.getCurrentPlayer()).toString()); // SAYS WHAT ACTION PLAYER i CHOSE!
+                wgs.getTurnAction(wgs.getCurrentPlayer()).execute(wgs); // EXECUTE THE ACTION
+                wgs.setTurnAction(wgs.getCurrentPlayer(), null); // ACTION LIST FOR THE PLAYER IS NOW EMPTY
+            }
+            System.out.println("----------------------------------------------------------------------------------------");
+            wgs.getTurnOrder().setTurnOwner(0);
+        }
         checkAgeEnd(wgs); // Check for game end;
     }
 
@@ -130,9 +147,11 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         return card;
     }
 
-    protected void checkAgeEnd(Wonders7GameState wgs){
+    protected void checkAgeEnd(AbstractGameState gameState){
+        Wonders7GameState wgs = (Wonders7GameState) gameState;
         if (wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize() == 0){  // If all players hands are empty
             wgs.getTurnOrder().endRound(wgs); // Ends the round,
+            ((Wonders7TurnOrder) wgs.getTurnOrder()).reverse();
             // Resolves military conflicts
             for (int i=0; i< wgs.getNPlayers(); i++){
                 int nextplayer = (i+1)% wgs.getNPlayers();
