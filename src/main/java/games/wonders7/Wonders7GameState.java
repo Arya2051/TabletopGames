@@ -23,7 +23,7 @@ public class Wonders7GameState extends AbstractGameState {
     int currentAge; // int from 1,2,3 of current age
     int[] playerVictoryPoints;
     List<HashMap<Wonder7Card.resources, Integer>> playerResources;
-    List<Deck<Wonder7Card>> playerHand; // 7 Cards player has to choose from
+    List<Deck<Wonder7Card>> playerHands; // 7 Cards player has to choose from
     List<Deck<Wonder7Card>> playedCards; // Player used cards
     Deck<Wonder7Card> AgeDeck; // The deck for Age 1, the 'draw deck'
     Deck<Wonder7Card> discardPile; // Discarded cards
@@ -74,14 +74,14 @@ public class Wonders7GameState extends AbstractGameState {
         // For more detail see Hiding information
         Wonders7GameState copy = new Wonders7GameState(gameParameters.copy(), getNPlayers());
         copy.playerResources = new ArrayList<>();
-        copy.playerHand = new ArrayList<>();
+        copy.playerHands = new ArrayList<>();
         copy.playedCards = new ArrayList<>();
 
         for (HashMap<Wonder7Card.resources, Integer> map: playerResources) {
             copy.playerResources.add(new HashMap<>(map));
         }
-        for (Deck<Wonder7Card> deck: playerHand) {
-            copy.playerHand.add(deck.copy());
+        for (Deck<Wonder7Card> deck: playerHands) {
+            copy.playerHands.add(deck.copy());
         }
         for (Deck<Wonder7Card> deck: playedCards) {
             copy.playedCards.add(deck.copy());
@@ -126,7 +126,8 @@ public class Wonders7GameState extends AbstractGameState {
 
     public Deck<Wonder7Card> getAgeDeck(){return AgeDeck;}
 
-    public Deck<Wonder7Card> getPlayerHand(int index){return playerHand.get(index);} // Get player hand
+    public Deck<Wonder7Card> getPlayerHand(int index){return playerHands.get(index);} // Get player hand
+    public List<Deck<Wonder7Card>> getPlayerHands(){return playerHands;}
 
     public Deck<Wonder7Card> getPlayedCards(int index){return playedCards.get(index);} // Get player 'played' cards
 

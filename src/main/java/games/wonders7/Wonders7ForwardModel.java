@@ -24,11 +24,11 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         Wonders7GameState wgs = (Wonders7GameState) state;
 
         // Sets up each player's hand and their played cards, and their resources
-        wgs.playerHand = new ArrayList<>();
+        wgs.playerHands = new ArrayList<>();
         wgs.playedCards = new ArrayList<>();
         wgs.turnActions = new AbstractAction[wgs.getNPlayers()];
         for (int i=0; i<wgs.getNPlayers(); i++){
-            wgs.playerHand.add(new Deck<>("Player hand" + i, i, CoreConstants.VisibilityMode.HIDDEN_TO_ALL));
+            wgs.playerHands.add(new Deck<>("Player hand" + i, i, CoreConstants.VisibilityMode.HIDDEN_TO_ALL));
             wgs.playedCards.add(new Deck<>("Played Cards", CoreConstants.VisibilityMode.VISIBLE_TO_ALL));
         }
 
@@ -55,20 +55,21 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
-
+        // PRINTS THE SIZE OF EVERY PLAYERS HAND AND ALL THE CARDS IN THEIR HANDS
          if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
-             // DEBUGGING. PRINTS THE SIZE OF EVERY PLAYERS HAND AND ALL THE CARDS IN THEIR HANDS
              System.out.println("Number of cards in players hands: ");
              for (int i = 0; i < wgs.getNPlayers(); i++) {
                  System.out.println(wgs.getPlayerHand(i).getSize() + " --> " + wgs.getPlayerHand(i).toString());
              }
          }
 
+         // PLAYERS SELECT A CARD
          if (wgs.getTurnAction(wgs.getNPlayers()-1) == null) { // CHOOSE ACTIONS
             wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
             wgs.getTurnOrder().endPlayerTurn(wgs);
 
         }
+        // EVERYBODY NOW PLAYS THEIR CARDS
         else if (wgs.getTurnAction(wgs.getNPlayers()-1) != null) { // ACTION ROUND
             for (int i = 0; i < wgs.getNPlayers(); i++) {
                 wgs.getTurnOrder().setTurnOwner(i); // PLAYER i DOES THE ACTION THEY SELECTED, NOT ANOTHER PLAYERS ACTION
@@ -78,8 +79,16 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             }
             System.out.println("----------------------------------------------------------------------------------------");
             wgs.getTurnOrder().setTurnOwner(0);
+
+            // PLAYER HANDS ARE NOW ROTATED AROUND EACH PLAYER
+             Deck<Wonder7Card> temp = wgs.getPlayerHands().get(0);
+             for (int i=0; i< wgs.getNPlayers();i++){
+                 if (i==wgs.getNPlayers()-1){wgs.getPlayerHands().set(i, temp);} // makes sure the last player receives first players original hand
+                 else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get((i+1)% wgs.getNPlayers()));} // Rotates hands clockwise
+                 System.out.println("ROTATING HANDS!!!!!");
+             }
         }
-        checkAgeEnd(wgs); // Check for game end;
+        checkAgeEnd(wgs); // Check for Age end;
     }
 
     @Override
@@ -207,15 +216,18 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     @Override
     protected void endGame(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
-        for (int i=0;i< gameState.getNPlayers();i++){
+        for (int i = 0; i < gameState.getNPlayers(); i++) {
             System.out.println("Number of victory points for the player " + i + " is: " + wgs.getPlayerResources(i).get(Wonder7Card.resources.victory));
         }
+        System.out.println("");
+        System.out.println("PLAYER BUILT STRUCTURES: ");
+        for (int i = 0; i < wgs.getNPlayers(); i++) {
+            System.out.println(wgs.getPlayedCards(i).getSize() + " --> " + wgs.getPlayedCards(i).toString());
+        }
+        // You may override the endGame() method if your game requires any extra end of game computation (e.g. to update the status of players still in the game to winners).
+        // !!!
+        // Note: Forward model classes can instead extend from the core.rules.AbstractRuleBasedForwardModel.java abstract class instead, if they wish to use the rule-based system instead; this class provides basic functionality and documentation for using rules and an already implemented _next() function.
+        // !!!
     }
-    // You may override the endGame() method if your game requires any extra end of game computation (e.g. to update the status of players still in the game to winners).
-    // !!!
-    // Note: Forward model classes can instead extend from the core.rules.AbstractRuleBasedForwardModel.java abstract class instead, if they wish to use the rule-based system instead; this class provides basic functionality and documentation for using rules and an already implemented _next() function.
-    // !!!
-
-    
 }
 

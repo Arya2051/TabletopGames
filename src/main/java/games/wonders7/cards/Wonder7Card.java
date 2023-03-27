@@ -124,9 +124,17 @@ public class Wonder7Card extends Card {
         return new Wonder7Card(cardName, type, nPlayers, age, constructionCost, manufacturedGoods,componentID);
     }
 
-    // Checks if player can pay the cost of the card
+    // Checks if player can pay the cost of the card or if the player is allowed to build the structure
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
+        // Checks if the player has an identical structure
+        for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+                return false;
+            }
+        }
+
+        // Checks if player can afford the cost of the card
         Set<resources> key = constructionCost.keySet(); //Gets the resources of the player
         for (resources resource : key) {// Goes through every resource the player has
             if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCost.get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e. the player can afford the card)
