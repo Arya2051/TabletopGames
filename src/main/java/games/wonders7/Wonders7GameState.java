@@ -4,13 +4,10 @@ package games.wonders7;// import core.interfaces.IfeatureRepresentation;
 import core.AbstractGameState;
 import core.AbstractParameters;
 import core.actions.AbstractAction;
-import core.actions.DrawCard;
-import core.components.Card;
 import core.components.Component;
 import core.components.Deck;
-import core.turnorders.AlternatingTurnOrder;
-import games.dotsboxes.DBEdge;
 import games.wonders7.cards.Wonder7Card;
+import games.wonders7.cards.Wonder7Board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +22,13 @@ public class Wonders7GameState extends AbstractGameState {
     List<HashMap<Wonder7Card.resources, Integer>> playerResources;
     List<Deck<Wonder7Card>> playerHands; // 7 Cards player has to choose from
     List<Deck<Wonder7Card>> playedCards; // Player used cards
-    Deck<Wonder7Card> AgeDeck; // The deck for Age 1, the 'draw deck'
+    Deck<Wonder7Card> AgeDeck; // The 'draw deck' for the Age
     Deck<Wonder7Card> discardPile; // Discarded cards
+
+    Deck<Wonder7Board> wonderBoardDeck; // The deck of wonder board that decide a players wonder
+
+    Wonder7Board[] playerWonderBoard; // Every player's assigned Wonder Board
+
     AbstractAction[] turnActions; // The round's actions chosen by each player
 
 
@@ -40,21 +42,10 @@ public class Wonders7GameState extends AbstractGameState {
         for (int i=0; i<getNPlayers(); i++){
             playerResources.add(new HashMap<>());
         }
+
         // Then fills every player's hashmaps, so each player has 0 of each resource
         for (int i=0; i<getNPlayers(); i++){ // For each
-            playerResources.get(i).put(Wonder7Card.resources.wood, 0);
-            playerResources.get(i).put(Wonder7Card.resources.stone, 0);
-            playerResources.get(i).put(Wonder7Card.resources.clay, 0);
-            playerResources.get(i).put(Wonder7Card.resources.ore, 0);
-            playerResources.get(i).put(Wonder7Card.resources.glass, 0);
-            playerResources.get(i).put(Wonder7Card.resources.papyrus, 0);
-            playerResources.get(i).put(Wonder7Card.resources.textile, 0);
-            playerResources.get(i).put(Wonder7Card.resources.cog, 0);
-            playerResources.get(i).put(Wonder7Card.resources.compass, 0);
-            playerResources.get(i).put(Wonder7Card.resources.tablet, 0);
-            playerResources.get(i).put(Wonder7Card.resources.shield, 0);
-            playerResources.get(i).put(Wonder7Card.resources.victory, 0);
-            playerResources.get(i).put(Wonder7Card.resources.coin, 0);
+            for (Wonder7Card.resources type: Wonder7Card.resources.values()){playerResources.get(i).put(type, 0);}
         }
 
     }

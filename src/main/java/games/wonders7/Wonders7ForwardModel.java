@@ -4,11 +4,10 @@ import core.AbstractGameState;
 import core.CoreConstants;
 import core.actions.AbstractAction;
 import core.components.Deck;
-import core.turnorders.AlternatingTurnOrder;
 import games.wonders7.actions.DiscardCard;
 import games.wonders7.actions.PlayCard;
 import games.wonders7.cards.Wonder7Card;
-import games.wonders7.cards.WonderBoard;
+import games.wonders7.cards.Wonder7Board;
 import utilities.Utils;
 
 import java.util.ArrayList;
@@ -23,30 +22,38 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     public void _setup(AbstractGameState state){
         Wonders7GameState wgs = (Wonders7GameState) state;
 
-        // Sets up each player's hand and their played cards, and their resources
+        // Sets up each player's hand and their played cards and their wonders
         wgs.playerHands = new ArrayList<>();
         wgs.playedCards = new ArrayList<>();
         wgs.turnActions = new AbstractAction[wgs.getNPlayers()];
+        wgs.playerWonderBoard = new Wonder7Board[wgs.getNPlayers()];
+
         for (int i=0; i<wgs.getNPlayers(); i++){
             wgs.playerHands.add(new Deck<>("Player hand" + i, i, CoreConstants.VisibilityMode.HIDDEN_TO_ALL));
             wgs.playedCards.add(new Deck<>("Played Cards", CoreConstants.VisibilityMode.VISIBLE_TO_ALL));
         }
 
         // Cards that have been discarded all players
-        wgs.discardPile = new Deck<Wonder7Card>("Discarded Cards", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
+        wgs.discardPile = new Deck<>("Discarded Cards", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
 
-        // Creates Age1 Deck and shuffle
-        wgs.AgeDeck = new Deck<Wonder7Card>("Age 1 Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL); //Going
-        createDeck(wgs); // Fills Age1 deck with cards
+        // Creates Age1 Deck and wonder deck and shuffle
+        wgs.AgeDeck = new Deck<>("Age 1 Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
+        wgs.wonderBoardDeck = new Deck<>("Wonder Board Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
+        createAgeDeck(wgs); // Fills Age1 deck with cards
+        createWonderDeck(wgs);
         Random r = new Random(wgs.getGameParameters().getRandomSeed());
         wgs.AgeDeck.shuffle(r);
+        wgs.wonderBoardDeck.shuffle(r);
 
         // Give each player their 7 cards in the beginning of the Age
         for (int player=0; player < wgs.getNPlayers(); player++){
             for (int card=0; card< ((Wonders7GameParameters) wgs.getGameParameters()).nWonderCardsPerPlayer; card++) {
                 wgs.getPlayerHand(player).add(wgs.AgeDeck.draw());
             }
+            wgs.playerWonderBoard[player] = wgs.wonderBoardDeck.draw();
         }
+
+        // Give each player their wonders
 
         // Player 0 starts
         wgs.getTurnOrder().setTurnOwner(0);
@@ -55,7 +62,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
-        // PRINTS THE SIZE OF EVERY PLAYERS HAND AND ALL THE CARDS IN THEIR HANDS
+        // Prints players hands and the sizes
          if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
              System.out.println("Number of cards in players hands: ");
              for (int i = 0; i < wgs.getNPlayers(); i++) {
@@ -116,8 +123,20 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         return new Wonders7ForwardModel();
     }
 
-    protected void createDeck(Wonders7GameState wgs){
-        // This method will create the deck for the current Era
+    protected void createWonderDeck(Wonders7GameState wgs){
+        // Create all the possible wonders a player could be assigned
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.colossus));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.gardens));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.statue));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.mausoleum));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.pyramids));
+
+    }
+
+    protected void createAgeDeck(Wonders7GameState wgs){
+        // This method will create the deck for the current Era and
         // All the hashmaps containing different number of resources
 
         for (int i = 0; i<2; i++){
@@ -222,7 +241,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         System.out.println("");
         System.out.println("PLAYER BUILT STRUCTURES: ");
         for (int i = 0; i < wgs.getNPlayers(); i++) {
-            System.out.println(wgs.getPlayedCards(i).getSize() + " --> " + wgs.getPlayedCards(i).toString());
+            System.out.println(wgs.playerWonderBoard[i].toString()+" "+ wgs.getPlayedCards(i).getSize() + " --> " + wgs.getPlayedCards(i).toString());
         }
         // You may override the endGame() method if your game requires any extra end of game computation (e.g. to update the status of players still in the game to winners).
         // !!!

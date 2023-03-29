@@ -1,6 +1,7 @@
 package games.wonders7.cards;
 
 import core.AbstractGameState;
+import core.AbstractParameters;
 import core.components.Card;
 import games.wonders7.Wonders7GameState;
 
@@ -25,7 +26,7 @@ public class Wonder7Card extends Card {
         Guilds,
 
     }
-    // ENUM OF MATERIALS, so EACH CARD
+    // ENUM OF MATERIALS
     public enum resources { //Another enum for costs
 
         wood,
@@ -146,19 +147,8 @@ public class Wonder7Card extends Card {
 
     public HashMap<resources, Integer> empty(){
         HashMap<resources, Integer> empty = new HashMap<>();
-        empty.put(Wonder7Card.resources.wood, 0);
-        empty.put(Wonder7Card.resources.stone, 0);
-        empty.put(Wonder7Card.resources.clay, 0);
-        empty.put(Wonder7Card.resources.ore, 0);
-        empty.put(Wonder7Card.resources.glass, 0);
-        empty.put(Wonder7Card.resources.papyrus, 0);
-        empty.put(Wonder7Card.resources.textile, 0);
-        empty.put(Wonder7Card.resources.cog, 0);
-        empty.put(Wonder7Card.resources.compass, 0);
-        empty.put(Wonder7Card.resources.tablet, 0);
-        empty.put(Wonder7Card.resources.shield, 0);
-        empty.put(Wonder7Card.resources.victory, 0);
-        empty.put(Wonder7Card.resources.coin, 0);
+        for (Wonder7Card.resources type: Wonder7Card.resources.values()){empty.put(type, 0);}
+
         return empty;
     }
 
