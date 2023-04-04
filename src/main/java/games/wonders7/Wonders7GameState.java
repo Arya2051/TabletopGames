@@ -19,7 +19,7 @@ public class Wonders7GameState extends AbstractGameState {
 
     int currentAge; // int from 1,2,3 of current age
     int[] playerVictoryPoints;
-    List<HashMap<Wonder7Card.resources, Integer>> playerResources;
+    List<HashMap<Wonders7Constants.resources, Integer>> playerResources;
     List<Deck<Wonder7Card>> playerHands; // 7 Cards player has to choose from
     List<Deck<Wonder7Card>> playedCards; // Player used cards
     Deck<Wonder7Card> AgeDeck; // The 'draw deck' for the Age
@@ -45,7 +45,7 @@ public class Wonders7GameState extends AbstractGameState {
 
         // Then fills every player's hashmaps, so each player has 0 of each resource
         for (int i=0; i<getNPlayers(); i++){ // For each
-            for (Wonder7Card.resources type: Wonder7Card.resources.values()){playerResources.get(i).put(type, 0);}
+            for (Wonders7Constants.resources type: Wonders7Constants.resources.values()){playerResources.get(i).put(type, 0);}
         }
 
     }
@@ -68,7 +68,7 @@ public class Wonders7GameState extends AbstractGameState {
         copy.playerHands = new ArrayList<>();
         copy.playedCards = new ArrayList<>();
 
-        for (HashMap<Wonder7Card.resources, Integer> map: playerResources) {
+        for (HashMap<Wonders7Constants.resources, Integer> map: playerResources) {
             copy.playerResources.add(new HashMap<>(map));
         }
         for (Deck<Wonder7Card> deck: playerHands) {
@@ -126,7 +126,7 @@ public class Wonders7GameState extends AbstractGameState {
     public AbstractAction getTurnAction(int index){return turnActions[index];}
     public void setTurnAction(int index, AbstractAction action){turnActions[index] = action;}
 
-    public List<HashMap<Wonder7Card.resources, Integer>> getAllPlayerResources(){return playerResources;} // Return all player's resources hashmap
+    public List<HashMap<Wonders7Constants.resources, Integer>> getAllPlayerResources(){return playerResources;} // Return all player's resources hashmap
 
-    public HashMap<Wonder7Card.resources, Integer> getPlayerResources(int index){return playerResources.get(index);} // Return players resource hashmap
+    public HashMap<Wonders7Constants.resources, Integer> getPlayerResources(int index){return playerResources.get(index);} // Return players resource hashmap
 }

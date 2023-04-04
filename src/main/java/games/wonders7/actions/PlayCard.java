@@ -2,6 +2,7 @@ package games.wonders7.actions;
 
 import core.AbstractGameState;
 import core.actions.DrawCard;
+import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
 import games.wonders7.cards.Wonder7Card;
 
@@ -35,8 +36,8 @@ public class PlayCard extends DrawCard {
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being
 
         // Adds the resources the played card provides to player's resources
-        Set<Wonder7Card.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
-        for (Wonder7Card.resources resource: keys){  // Goes through all keys for each resource
+        Set<Wonders7Constants.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
+        for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
             int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
             wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, cardValue + playerValue); // Adds the resources provided by the card to the players resource count

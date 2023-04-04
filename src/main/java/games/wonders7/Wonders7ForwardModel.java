@@ -40,7 +40,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         wgs.AgeDeck = new Deck<>("Age 1 Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
         wgs.wonderBoardDeck = new Deck<>("Wonder Board Deck", CoreConstants.VisibilityMode.HIDDEN_TO_ALL);
         createAgeDeck(wgs); // Fills Age1 deck with cards
-        createWonderDeck(wgs);
+        createWonderDeck(wgs); // Adds Wonders into game
         Random r = new Random(wgs.getGameParameters().getRandomSeed());
         wgs.AgeDeck.shuffle(r);
         wgs.wonderBoardDeck.shuffle(r);
@@ -125,13 +125,14 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     protected void createWonderDeck(Wonders7GameState wgs){
         // Create all the possible wonders a player could be assigned
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.colossus));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.gardens));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.statue));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.mausoleum));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.pyramids));
+        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.colossus), createCardHash(new Wonder7Board.resources[]{}, new int[]{}));
+        //.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2})));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2})));
+        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.gardens));
+        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.statue));
+        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.mausoleum));
+        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.pyramids));
 
     }
 
@@ -141,34 +142,34 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
         for (int i = 0; i<2; i++){
             // Raw Materials
-            wgs.AgeDeck.add(new Wonder7Card("Lumber Yard", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.wood}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Ore Vein", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.ore}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Clay Pool", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.clay}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Stone Pit", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.stone}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Lumber Yard", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Ore Vein", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Clay Pool", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.clay}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Stone Pit", Wonder7Card.Wonder7CardType.RawMaterials, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{1})));
             // Manufactured Goods
-            wgs.AgeDeck.add(new Wonder7Card("Loom", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.textile}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("GlassWorks", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.glass}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Press", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.papyrus}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Loom", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.textile}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("GlassWorks", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.glass}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Press", Wonder7Card.Wonder7CardType.ManufacturedGoods, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{1})));
             // Civilian Structures
-            wgs.AgeDeck.add(new Wonder7Card("Altar", Wonder7Card.Wonder7CardType.CivilianStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{}, new int[]{}), createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.victory}, new int[]{2})));
+            wgs.AgeDeck.add(new Wonder7Card("Altar", Wonder7Card.Wonder7CardType.CivilianStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{}, new int[]{}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{2})));
             // Scientific Structures
-            wgs.AgeDeck.add(new Wonder7Card("Apothecary", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.textile}, new int[]{1}), createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.compass}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Workshop", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.glass}, new int[]{1}), createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.cog}, new int[]{1})));
-            wgs.AgeDeck.add(new Wonder7Card("Scriptorium", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.papyrus}, new int[]{1}), createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.tablet}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Apothecary", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.textile}, new int[]{1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.compass}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Workshop", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.glass}, new int[]{1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.cog}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Scriptorium", Wonder7Card.Wonder7CardType.ScientificStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.tablet}, new int[]{1})));
             // Commercial Structures
 
             // MilitaryStructures
-            wgs.AgeDeck.add(new Wonder7Card("Stockade", Wonder7Card.Wonder7CardType.MilitaryStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.wood}, new int[]{1}), createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.shield}, new int[]{1})));
+            wgs.AgeDeck.add(new Wonder7Card("Stockade", Wonder7Card.Wonder7CardType.MilitaryStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{1})));
         }
         for (int i = 0; i<3; i++){
-            wgs.AgeDeck.add(new Wonder7Card("Tavern", Wonder7Card.Wonder7CardType.CommercialStructures, wgs.getNPlayers(), 1, createCardHash(new Wonder7Card.resources[]{Wonder7Card.resources.coin}, new int[]{5})));
+            wgs.AgeDeck.add(new Wonder7Card("Tavern", Wonder7Card.Wonder7CardType.CommercialStructures, wgs.getNPlayers(), 1, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.coin}, new int[]{5})));
 
         }
     }
 
-    protected HashMap<Wonder7Card.resources, Integer> createCardHash(Wonder7Card.resources[] resource, int[] number){
+    protected HashMap<Wonders7Constants.resources, Integer> createCardHash(Wonders7Constants.resources[] resource, int[] number){
         // This will have to create the resource hashmaps for each card and return them
-        HashMap<Wonder7Card.resources, Integer> card = new HashMap<>();
+        HashMap<Wonders7Constants.resources, Integer> card = new HashMap<>();
         for (int i=0; i < number.length; i++){
             card.put(resource[i], number[i]);
         }
@@ -183,13 +184,13 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             // Resolves military conflicts
             for (int i=0; i< wgs.getNPlayers(); i++){
                 int nextplayer = (i+1)% wgs.getNPlayers();
-                if(wgs.getPlayerResources(i).get(Wonder7Card.resources.shield) > wgs.getPlayerResources(nextplayer).get(Wonder7Card.resources.shield)){ // IF PLAYER i WINS
-                    wgs.getPlayerResources(nextplayer).put(Wonder7Card.resources.victory,  wgs.getPlayerResources(nextplayer).get(Wonder7Card.resources.victory)+(2*wgs.currentAge-1)); // 2N-1 POINTS FOR PLAYER i
-                    wgs.getPlayerResources(i).put(Wonder7Card.resources.victory,  wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)-1); // -1 FOR THE PLAYER i+1
+                if(wgs.getPlayerResources(i).get(Wonders7Constants.resources.shield) > wgs.getPlayerResources(nextplayer).get(Wonders7Constants.resources.shield)){ // IF PLAYER i WINS
+                    wgs.getPlayerResources(nextplayer).put(Wonders7Constants.resources.victory,  wgs.getPlayerResources(nextplayer).get(Wonders7Constants.resources.victory)+(2*wgs.currentAge-1)); // 2N-1 POINTS FOR PLAYER i
+                    wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory,  wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)-1); // -1 FOR THE PLAYER i+1
                 }
                 else { // IF PLAYER i+1 WINS
-                    wgs.getPlayerResources(i).put(Wonder7Card.resources.victory,  wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)-1);// -1 POINT FOR THE PLAYER i
-                    wgs.getPlayerResources(nextplayer).put(Wonder7Card.resources.victory,  wgs.getPlayerResources(nextplayer).get(Wonder7Card.resources.victory)+(2*wgs.currentAge-1));// 2N-1 POINTS FOR PLAYER i+1
+                    wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory,  wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)-1);// -1 POINT FOR THE PLAYER i
+                    wgs.getPlayerResources(nextplayer).put(Wonders7Constants.resources.victory,  wgs.getPlayerResources(nextplayer).get(Wonders7Constants.resources.victory)+(2*wgs.currentAge-1));// 2N-1 POINTS FOR PLAYER i+1
                 }
             }
 
@@ -205,18 +206,18 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             // treasury, scientific, commercial and finally guilds
             for (int i=0; i< wgs.getNPlayers(); i++){
                 // Treasury
-                wgs.playerResources.get(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.coin)/3);
+                wgs.playerResources.get(i).put(Wonders7Constants.resources.victory, wgs.getPlayerResources(i).get(Wonders7Constants.resources.coin)/3);
                 // Scientific
-                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.cog),2));
-                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.compass),2));
-                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonder7Card.resources.tablet),2));
-                wgs.getPlayerResources(i).put(Wonder7Card.resources.victory, wgs.getPlayerResources(i).get(Wonder7Card.resources.victory)+7*Math.min(Math.min(wgs.getPlayerResources(i).get(Wonder7Card.resources.cog),wgs.getPlayerResources(i).get(Wonder7Card.resources.compass)),wgs.getPlayerResources(i).get(Wonder7Card.resources.tablet))); // Sets of different science symbols
+                wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory, wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonders7Constants.resources.cog),2));
+                wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory, wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonders7Constants.resources.compass),2));
+                wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory, wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)+(int)Math.pow(wgs.getPlayerResources(i).get(Wonders7Constants.resources.tablet),2));
+                wgs.getPlayerResources(i).put(Wonders7Constants.resources.victory, wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory)+7*Math.min(Math.min(wgs.getPlayerResources(i).get(Wonders7Constants.resources.cog),wgs.getPlayerResources(i).get(Wonders7Constants.resources.compass)),wgs.getPlayerResources(i).get(Wonders7Constants.resources.tablet))); // Sets of different science symbols
 
             }
 
             int winner = 0;
             for (int i=0; i<wgs.getNPlayers(); i++){
-                if (wgs.getPlayerResources(i).get(Wonder7Card.resources.victory) >= wgs.getPlayerResources(winner).get(Wonder7Card.resources.victory)){
+                if (wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory) >= wgs.getPlayerResources(winner).get(Wonders7Constants.resources.victory)){
                     wgs.setPlayerResult(Utils.GameResult.LOSE,winner); // SETS PREVIOUS WINNER AS LOST
                     wgs.setPlayerResult(Utils.GameResult.WIN,i); // SETS NEW WINNER AS PLAYER i
                     winner = i; // Sets the new winner as i, THIS DOESN'T WORK FOR TIES
@@ -236,7 +237,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     protected void endGame(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         for (int i = 0; i < gameState.getNPlayers(); i++) {
-            System.out.println("Number of victory points for the player " + i + " is: " + wgs.getPlayerResources(i).get(Wonder7Card.resources.victory));
+            System.out.println("Number of victory points for the player " + i + " is: " + wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory));
         }
         System.out.println("");
         System.out.println("PLAYER BUILT STRUCTURES: ");

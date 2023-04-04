@@ -3,6 +3,7 @@ package games.wonders7.cards;
 import core.AbstractGameState;
 import core.AbstractParameters;
 import core.components.Card;
+import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
 
 import java.util.HashMap;
@@ -26,47 +27,18 @@ public class Wonder7Card extends Card {
         Guilds,
 
     }
-    // ENUM OF MATERIALS
-    public enum resources { //Another enum for costs
 
-        wood,
-
-        stone,
-
-        clay,
-
-        ore,
-
-        glass,
-
-        papyrus,
-
-        textile,
-
-        cog,
-
-        compass,
-
-        tablet,
-
-        shield,
-
-        victory,
-
-        coin,
-
-    }
 
     public final Wonder7CardType type;  // Different type of cards, brown cards, grey cards...)
     public final int nPlayers; // The number of players this card can be in the game for.
     public final int age; // Which deck/age the card belongs to
     public final String cardName; // Name of card
-    public final HashMap<resources, Integer> constructionCost; // The resources required to construct structure
-    public final HashMap<resources, Integer> manufacturedGoods; // Resources the card creates
+    public final HashMap<Wonders7Constants.resources, Integer> constructionCost; // The resources required to construct structure
+    public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Resources the card creates
     //public final HashMap<Wonder7Card, Integer> prerequisite; // THE STRUCTURES REQUIRED TO BUILD CARD FOR FREE
 
     // A normal card with construction cost, produces resources and is a prerequisite to another card
-    public Wonder7Card(String name, Wonder7CardType type,  int nPlayers, int age, HashMap<resources,Integer> constructionCost, HashMap<resources,Integer> manufacturedGoods) {
+    public Wonder7Card(String name, Wonder7CardType type,  int nPlayers, int age, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods) {
         super(name);
         this.cardName = name;
         this.type = type;
@@ -76,7 +48,7 @@ public class Wonder7Card extends Card {
         this.manufacturedGoods = manufacturedGoods;
     }
     // A free card (no construction cost)
-    public Wonder7Card(String name, Wonder7CardType type, int nPlayers, int age, HashMap<resources,Integer> manufacturedGoods){
+    public Wonder7Card(String name, Wonder7CardType type, int nPlayers, int age, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods){
         super(name);
         this.cardName = name;
         this.type = type;
@@ -86,7 +58,7 @@ public class Wonder7Card extends Card {
         this.manufacturedGoods = manufacturedGoods;
     }
 
-    protected Wonder7Card(String name, Wonder7CardType type,  int nPlayers, int age, HashMap<resources,Integer> constructionCost, HashMap<resources,Integer> manufacturedGoods, int componentID){
+    protected Wonder7Card(String name, Wonder7CardType type,  int nPlayers, int age, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods, int componentID){
         super(name, componentID);
         this.cardName = name;
         this.type = type;
@@ -136,8 +108,8 @@ public class Wonder7Card extends Card {
         }
 
         // Checks if player can afford the cost of the card
-        Set<resources> key = constructionCost.keySet(); //Gets the resources of the player
-        for (resources resource : key) {// Goes through every resource the player has
+        Set<Wonders7Constants.resources> key = constructionCost.keySet(); //Gets the resources of the player
+        for (Wonders7Constants.resources resource : key) {// Goes through every resource the player has
             if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCost.get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e. the player can afford the card)
                 return false; // Player cant afford card
             }
@@ -145,9 +117,9 @@ public class Wonder7Card extends Card {
         return true;
     }
 
-    public HashMap<resources, Integer> empty(){
-        HashMap<resources, Integer> empty = new HashMap<>();
-        for (Wonder7Card.resources type: Wonder7Card.resources.values()){empty.put(type, 0);}
+    public HashMap<Wonders7Constants.resources, Integer> empty(){
+        HashMap<Wonders7Constants.resources, Integer> empty = new HashMap<>();
+        for (Wonders7Constants.resources type: Wonders7Constants.resources.values()){empty.put(type, 0);}
 
         return empty;
     }
