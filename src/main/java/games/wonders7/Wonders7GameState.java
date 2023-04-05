@@ -41,12 +41,14 @@ public class Wonders7GameState extends AbstractGameState {
         playerResources = new ArrayList<>(); // New arraylist , containing different hashmaps for each player
         for (int i=0; i<getNPlayers(); i++){
             playerResources.add(new HashMap<>());
+
         }
 
         // Then fills every player's hashmaps, so each player has 0 of each resource
         for (int i=0; i<getNPlayers(); i++){ // For each
             for (Wonders7Constants.resources type: Wonders7Constants.resources.values()){playerResources.get(i).put(type, 0);}
         }
+
 
     }
 
@@ -67,6 +69,7 @@ public class Wonders7GameState extends AbstractGameState {
         copy.playerResources = new ArrayList<>();
         copy.playerHands = new ArrayList<>();
         copy.playedCards = new ArrayList<>();
+        copy.playerWonderBoard = new Wonder7Board[copy.getNPlayers()];
 
         for (HashMap<Wonders7Constants.resources, Integer> map: playerResources) {
             copy.playerResources.add(new HashMap<>(map));
@@ -81,6 +84,8 @@ public class Wonders7GameState extends AbstractGameState {
         copy.AgeDeck = AgeDeck.copy();
         copy.discardPile = discardPile.copy();
         copy.currentAge = currentAge;
+        copy.playerWonderBoard = playerWonderBoard;
+        copy.turnActions = turnActions;
 
         return copy;
     }
@@ -125,6 +130,9 @@ public class Wonders7GameState extends AbstractGameState {
     public Deck<Wonder7Card>  getDiscardPile(){return discardPile;}
     public AbstractAction getTurnAction(int index){return turnActions[index];}
     public void setTurnAction(int index, AbstractAction action){turnActions[index] = action;}
+    public Wonder7Board getPlayerWonderBoard(int index){return playerWonderBoard[index];}
+    public void setPlayerWonderBoard(int index, Wonder7Board wonder){playerWonderBoard[index] = wonder;}
+
 
     public List<HashMap<Wonders7Constants.resources, Integer>> getAllPlayerResources(){return playerResources;} // Return all player's resources hashmap
 

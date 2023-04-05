@@ -9,20 +9,16 @@ import games.wonders7.cards.Wonder7Card;
 import java.util.Objects;
 import java.util.Set;
 
-public class PlayCard extends DrawCard {
-
+public class BuildStage extends DrawCard {
     private String cardName;
 
-    // Player chooses card to play
-    public PlayCard(String cardName){
+    public BuildStage(String cardName){
         super();
         this.cardName = cardName;
-
     }
 
-
     @Override
-    public boolean execute(AbstractGameState gameState) {
+    public boolean execute(AbstractGameState gameState){
         super.execute(gameState);
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
@@ -35,27 +31,24 @@ public class PlayCard extends DrawCard {
         }
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
-        // Adds the resources the played card provides to player's resources
-        Set<Wonders7Constants.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
+        // Adds the resources the stage provides to player's resources
+        Set<Wonders7Constants.resources> keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
-            int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
+            int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the card provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, cardValue + playerValue); // Adds the resources provided by the card to the players resource count
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, stageValue + playerValue); // Adds the resources provided by the stage to the players resource count
         }
 
         // remove the card from the players hand to the playedDeck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
         wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
+
+        wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
         return true;
     }
 
     public String toString() {
-        return "Played card " + cardName;
-    }
-
-    @Override
-    public String getString(AbstractGameState gameState) {
-        return toString();
+        return "Built stage using " + cardName;
     }
 
     @Override
@@ -63,8 +56,8 @@ public class PlayCard extends DrawCard {
         if (this == o) return true;
         if (!(o instanceof Wonder7Card)) return false;
         if (!super.equals(o)) return false;
-        PlayCard playCard = (PlayCard) o;
-        return Objects.equals(cardName, playCard.cardName);
+        BuildStage buildStage = (BuildStage) o;
+        return Objects.equals(cardName, buildStage.cardName);
     }
 
     @Override
