@@ -97,7 +97,7 @@ public class Wonder7Board extends Card {
         return "null";
     }
 
-    public void createBoard(){
+    public void uniqueEffect(){
         switch (type){
             case colossus:
                 ; break;
@@ -130,9 +130,8 @@ public class Wonder7Board extends Card {
         return true;
     }
 
-    public boolean changeStage(){
+    public void changeStage(){
         wonderStage +=1;
-        return true;
     }
 
 }

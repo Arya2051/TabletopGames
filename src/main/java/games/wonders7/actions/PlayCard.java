@@ -35,12 +35,20 @@ public class PlayCard extends DrawCard {
         }
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
-        // Adds the resources the played card provides to player's resources
-        Set<Wonders7Constants.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
+        // Removes the resources paid for card
+        Set<Wonders7Constants.resources> keys = card.constructionCost.keySet();
+        for (Wonders7Constants.resources resource: keys){
+            int cardValue = card.constructionCost.get(resource); // Number of resource the card costs
+            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue - cardValue); // Subtracts the resources cost of the card from the players resource count
+        }
+
+        // Gives player resources produced from card
+        keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
             int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, cardValue + playerValue); // Adds the resources provided by the card to the players resource count
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue + cardValue); // Adds the resources provided by the card to the players resource count
         }
 
         // remove the card from the players hand to the playedDeck

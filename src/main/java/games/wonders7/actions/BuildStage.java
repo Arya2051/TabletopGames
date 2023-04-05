@@ -11,10 +11,12 @@ import java.util.Set;
 
 public class BuildStage extends DrawCard {
     private String cardName;
+    private int wonderStage;
 
-    public BuildStage(String cardName){
+    public BuildStage(String cardName, int wonderStage){
         super();
         this.cardName = cardName;
+        this.wonderStage = wonderStage;
     }
 
     @Override
@@ -31,12 +33,22 @@ public class BuildStage extends DrawCard {
         }
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
-        // Adds the resources the stage provides to player's resources
-        Set<Wonders7Constants.resources> keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
+        // Removes the resource paid for stage
+        Set<Wonders7Constants.resources> keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).constructionCosts.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
+        if (keys.size()==0){wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).uniqueEffect();return true;} // IF THE SECOND STAGE HAS DIFFERENT EFFECT
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
-            int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the card provides
+            int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).constructionCosts.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the stage provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, stageValue + playerValue); // Adds the resources provided by the stage to the players resource count
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue - stageValue); // Subtracts the resources cost of the stage from the players resource count
+        }
+
+        // Gives player resources produced from stage
+        keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
+        if (keys.size()==0){wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).uniqueEffect();return true;} // IF THE SECOND STAGE HAS DIFFERENT EFFECT
+        for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
+            int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the stage provides
+            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue + stageValue); // Adds the resources provided by the stage to the players resource count
         }
 
         // remove the card from the players hand to the playedDeck
@@ -48,7 +60,7 @@ public class BuildStage extends DrawCard {
     }
 
     public String toString() {
-        return "Built stage using " + cardName;
+        return "Built stage " + wonderStage + " using " + cardName;
     }
 
     @Override
