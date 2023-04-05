@@ -30,7 +30,7 @@ public class Wonder7Card extends Card {
 
 
     public final Wonder7CardType type;  // Different type of cards, brown cards, grey cards...)
-    public final int nPlayers; // The number of players this card can be in the game for.
+    public final int minPlayers; // The MIN number of players this card can be in the game for.
     public final int age; // Which deck/age the card belongs to
     public final String cardName; // Name of card
     public final HashMap<Wonders7Constants.resources, Integer> constructionCost; // The resources required to construct structure
@@ -42,7 +42,7 @@ public class Wonder7Card extends Card {
         super(name);
         this.cardName = name;
         this.type = type;
-        this.nPlayers = nPlayers;
+        this.minPlayers = nPlayers;
         this.age = age;
         this.constructionCost = constructionCost;
         this.manufacturedGoods = manufacturedGoods;
@@ -52,7 +52,7 @@ public class Wonder7Card extends Card {
         super(name);
         this.cardName = name;
         this.type = type;
-        this.nPlayers = nPlayers;
+        this.minPlayers = nPlayers;
         this.age = age;
         this.constructionCost = empty(); // Card costs nothing
         this.manufacturedGoods = manufacturedGoods;
@@ -62,7 +62,7 @@ public class Wonder7Card extends Card {
         super(name, componentID);
         this.cardName = name;
         this.type = type;
-        this.nPlayers = nPlayers;
+        this.minPlayers = nPlayers;
         this.age = age;
         this.constructionCost = constructionCost;
         this.manufacturedGoods = manufacturedGoods;
@@ -94,7 +94,7 @@ public class Wonder7Card extends Card {
 
     @Override
     public Wonder7Card copy(){
-        return new Wonder7Card(cardName, type, nPlayers, age, constructionCost, manufacturedGoods,componentID);
+        return new Wonder7Card(cardName, type, minPlayers, age, constructionCost, manufacturedGoods,componentID);
     }
 
     // Checks if player can pay the cost of the card or if the player is allowed to build the structure
