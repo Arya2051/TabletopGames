@@ -28,6 +28,7 @@ public class Wonder7Board extends Card {
 
     public final String wonderName;
     public final wonder type;
+    public boolean effectUsed;
     public int wonderStage;
     public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Resources the card creates
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts;
@@ -40,6 +41,7 @@ public class Wonder7Board extends Card {
         for (HashMap<Wonders7Constants.resources, Integer> cost : constructionCosts){this.constructionCosts.add(cost);}
         for (HashMap<Wonders7Constants.resources, Integer> produce : stageProduce){this.stageProduce.add(produce);}
         this.wonderStage = 1;
+        this.effectUsed = false;
 
         switch (type){
             case colossus:
@@ -97,25 +99,7 @@ public class Wonder7Board extends Card {
         return "null";
     }
 
-    public void uniqueEffect(){
-        switch (type){
-            case colossus:
-                ; break;
-            case lighthouse:
-                ; break;
-            case temple:
-                ; break;
-            case gardens:
-                ; break;
-            case statue:
-                ; break;
-            case mausoleum:
-                ; break;
-            case pyramids:
-                ; break;
-            default: ; break;
-        }
-    }
+
 
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;

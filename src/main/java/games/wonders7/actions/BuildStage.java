@@ -4,6 +4,7 @@ import core.AbstractGameState;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
+import games.wonders7.cards.Wonder7Board;
 import games.wonders7.cards.Wonder7Card;
 
 import java.util.Objects;
@@ -35,16 +36,44 @@ public class BuildStage extends DrawCard {
 
         // Removes the resource paid for stage
         Set<Wonders7Constants.resources> keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).constructionCosts.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
-        if (keys.size()==0){wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).uniqueEffect();return true;} // IF THE SECOND STAGE HAS DIFFERENT EFFECT
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
             int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).constructionCosts.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the stage provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
             wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue - stageValue); // Subtracts the resources cost of the stage from the players resource count
         }
 
+        // FOR SECOND STAGE UNIQUE EFFECTS
+        if (!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed){
+            Wonder7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
+            switch (board.type){
+                case lighthouse:
+                case mausoleum:
+                case gardens:
+                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = true;
+                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
+                    return true;
+                case statue:
+                    // Gives player resources produced from card
+                    keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
+                    for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
+                        int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
+                        int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
+                        wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue + cardValue); // Adds the resources provided by the card to the players resource count
+                    }
+
+                    // remove the card from the players hand to the playedDeck
+                    wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
+                    wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
+                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = true;
+                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
+                    return true;
+                default:
+                    break;
+            }}
+
+
         // Gives player resources produced from stage
         keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
-        if (keys.size()==0){wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).uniqueEffect();return true;} // IF THE SECOND STAGE HAS DIFFERENT EFFECT
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
             int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the stage provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
