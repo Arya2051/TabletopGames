@@ -77,21 +77,26 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
+        int direction = ((Wonders7TurnOrder) wgs.getTurnOrder()).getDirection();
 
         // Prints players hands and the sizes
          if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
-             System.out.println("Players resource counts: ");
+             System.out.println("Players resource counts and hands: ");
              for (int i = 0; i < wgs.getNPlayers(); i++) {
-                 System.out.println(wgs.getPlayerWonderBoard(i).toString() + " "+ i + " --> " + wgs.getPlayerResources(i));
+                 System.out.println(wgs.getPlayerWonderBoard(i).toString() + " "+ i + " --> " + wgs.getPlayerResources(i) + " --> " + wgs.getPlayerHand(i));
              }
             System.out.println("");
          }
 
          // PLAYERS SELECT A CARD
-         if (wgs.getTurnAction(wgs.getNPlayers()-1) == null) { // CHOOSE ACTIONS
+         if (wgs.getTurnAction(wgs.getNPlayers()-1) == null && wgs.currentAge!=2) { // CHOOSE ACTIONS
             wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
             wgs.getTurnOrder().endPlayerTurn(wgs);
-        }
+         }
+         else if (wgs.getTurnAction((wgs.getNPlayers()+1)% wgs.getNPlayers()) == null && wgs.currentAge==2){
+             wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
+             wgs.getTurnOrder().endPlayerTurn(wgs);
+         }
         // EVERYBODY NOW PLAYS THEIR CARDS
         else if (wgs.getTurnAction(wgs.getNPlayers()-1) != null) { // ACTION ROUND
             for (int i = 0; i < wgs.getNPlayers(); i++) {
@@ -105,9 +110,18 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
             // PLAYER HANDS ARE NOW ROTATED AROUND EACH PLAYER
              Deck<Wonder7Card> temp = wgs.getPlayerHands().get(0);
-             for (int i=0; i< wgs.getNPlayers();i++){
-                 if (i==wgs.getNPlayers()-1){wgs.getPlayerHands().set(i, temp);} // makes sure the last player receives first players original hand
-                 else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get((i+1)% wgs.getNPlayers()));} // Rotates hands clockwise
+             if (direction == 1) {
+                 for (int i = 0; i < wgs.getNPlayers(); i++) {
+                     if (i == wgs.getNPlayers()-1) {wgs.getPlayerHands().set(i, temp);} // makes sure the last player receives first players original hand
+                     else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i+1));} // Rotates hands clockwise
+                 }
+             }
+             else {
+                 temp = wgs.getPlayerHand((wgs.getNPlayers()-1)% wgs.getNPlayers());
+                 for (int i = (wgs.getNPlayers()-1)% wgs.getNPlayers(); i >-1; i--) {
+                     if (i% wgs.getNPlayers() == 0) {wgs.getPlayerHands().set(i, temp);} // makes sure the last player receives first players original hand
+                     else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i-1));} // Rotates hands anticlockwise
+                 }
              }
              System.out.println("ROTATING HANDS!!!!!");
          }

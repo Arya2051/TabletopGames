@@ -20,6 +20,10 @@ class Wonders7Game extends Game {
         ArrayList<AbstractPlayer> players = new ArrayList<>();
         players.add(new RandomPlayer());
         players.add(new RandomPlayer());
+        //players.add(new RandomPlayer());
+        //players.add(new RandomPlayer());
+        //players.add(new RandomPlayer());
+        //players.add(new RandomPlayer());
 
         Game game = new Wonders7Game(players, gameParameters);
         game.run();

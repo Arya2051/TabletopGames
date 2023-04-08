@@ -16,6 +16,9 @@ class Wonders7TurnOrder extends AlternatingTurnOrder {
     protected void _reset() {
 
     }
+    public int getDirection(){
+        return direction;
+    }
 
     @Override
     protected TurnOrder _copy() {
