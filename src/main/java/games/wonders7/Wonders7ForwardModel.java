@@ -336,10 +336,20 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
             int winner = 0;
             for (int i=0; i<wgs.getNPlayers(); i++){
-                if (wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory) >= wgs.getPlayerResources(winner).get(Wonders7Constants.resources.victory)){
+                // If a player has more victory points
+                if (wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory) > wgs.getPlayerResources(winner).get(Wonders7Constants.resources.victory)){
                     wgs.setPlayerResult(Utils.GameResult.LOSE,winner); // SETS PREVIOUS WINNER AS LOST
                     wgs.setPlayerResult(Utils.GameResult.WIN,i); // SETS NEW WINNER AS PLAYER i
-                    winner = i; // Sets the new winner as i, THIS DOESN'T WORK FOR TIES
+                    winner = i;
+                }
+                // In a tie, break with coins
+                else if (wgs.getPlayerResources(i).get(Wonders7Constants.resources.victory) == wgs.getPlayerResources(winner).get(Wonders7Constants.resources.victory)){
+                    if (wgs.getPlayerResources(i).get(Wonders7Constants.resources.coin) >= wgs.getPlayerResources(winner).get(Wonders7Constants.resources.coin)){
+                        wgs.setPlayerResult(Utils.GameResult.LOSE,winner);
+                        wgs.setPlayerResult(Utils.GameResult.WIN,i);
+                        winner = i;
+                    }
+                    else {wgs.setPlayerResult(Utils.GameResult.LOSE,i);}
                 }
                 else {
                     wgs.setPlayerResult(Utils.GameResult.LOSE,i); // Sets this player as LOST
