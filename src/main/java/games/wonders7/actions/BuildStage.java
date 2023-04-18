@@ -82,7 +82,7 @@ public class BuildStage extends DrawCard {
 
         // remove the card from the players hand to the playedDeck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
-        wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
+        wgs.getDiscardPile().add(card);
 
         wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
         return true;

@@ -6,6 +6,7 @@ import core.actions.AbstractAction;
 import core.components.Deck;
 import games.wonders7.actions.BuildStage;
 import games.wonders7.actions.DiscardCard;
+import games.wonders7.actions.FreeCard;
 import games.wonders7.actions.PlayCard;
 import games.wonders7.cards.Wonder7Card;
 import games.wonders7.cards.Wonder7Board;
@@ -135,24 +136,30 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
         // All playable cards in player hand
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
-            if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isPlayable(wgs)){
-                actions.add(new PlayCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); // Adds the card
+            if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isPlayable(wgs)&&wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).prerequisiteCards.length!=0){
+                actions.add((new FreeCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)));
+            }
+            else if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isPlayable(wgs)&&(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).constructionCost.size()!=0)){
+                actions.add(new PlayCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
+            }
+            else if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isPlayable(wgs)) {
+                actions.add(new FreeCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
             }
         }
         // All discard-able cards in player hand
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){
-            actions.add(new DiscardCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); //
+            actions.add(new DiscardCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
         }
 
-        // If next age is playable or not
+        // If next stage is playable or not
         if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).isPlayable(wgs)){
             for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++) { // Goes through each card in hand
                 actions.add(new BuildStage(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName, wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage));
-                System.out.println("JUST PLEASE BUILD THESE STAGESS ;;;;;;))())()()(");
+                //System.out.println("JUST PLEASE BUILD THESE STAGESS ;;;;;;))())()()(");
             }
         }
-        //System.out.println(actions);
-        //System.out.println("LIST OF ACTIONS FOR CURRENT PLAYER: "+actions);
+        //System.out.println(wgs.getCurrentPlayer());
+        System.out.println("LIST OF ACTIONS FOR CURRENT PLAYER: "+actions);
         return actions;
     }
 
@@ -237,7 +244,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                     wgs.AgeDeck.add(new Wonder7Card("GlassWorks", Wonder7Card.Wonder7CardType.ManufacturedGoods, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.glass}, new int[]{1})));
                     wgs.AgeDeck.add(new Wonder7Card("Press", Wonder7Card.Wonder7CardType.ManufacturedGoods, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{1})));
                     // Civilian Structures (Blue)
-                    wgs.AgeDeck.add(new Wonder7Card("Temple", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood, Wonders7Constants.resources.clay, Wonders7Constants.resources.glass},  new int[]{1,1,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3})));
+                    wgs.AgeDeck.add(new Wonder7Card("Temple", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood, Wonders7Constants.resources.clay, Wonders7Constants.resources.glass},  new int[]{1,1,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), new String[]{"Altar"}));
                     wgs.AgeDeck.add(new Wonder7Card("Courthouse", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.clay, Wonders7Constants.resources.textile},  new int[]{2,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{4})));
                     wgs.AgeDeck.add(new Wonder7Card("Statue", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore, Wonders7Constants.resources.wood},  new int[]{2,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{4})));
                     wgs.AgeDeck.add(new Wonder7Card("Aqueduct", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone},  new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{5})));
@@ -390,7 +397,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
         System.out.println("");
         for (int i = 0; i < wgs.getNPlayers(); i++) {
-            System.out.println(wgs.getPlayerWonderBoard(i).toString()+" "+ wgs.getPlayedCards(i).getSize() + " --> " + wgs.getPlayerResources(i));
+            System.out.println(wgs.getPlayerWonderBoard(i).toString()+" "+ i + " --> " + wgs.getPlayerResources(i) + " --> " + wgs.getPlayedCards(i));
         }
         // You may override the endGame() method if your game requires any extra end of game computation (e.g. to update the status of players still in the game to winners).
         // !!!
