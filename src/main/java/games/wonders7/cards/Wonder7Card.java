@@ -114,15 +114,6 @@ public class Wonder7Card extends Card {
             }
         }
 
-        // Checks if the player has prerequisite cards
-        for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            for (String prerequisite : wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).prerequisiteCards){
-                if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == prerequisite){
-                    return true;
-                }
-            }
-        }
-
         // Checks if player can afford the cost of the card
         Set<Wonders7Constants.resources> key = constructionCost.keySet(); //Gets the resources of the player
         for (Wonders7Constants.resources resource : key) { // Goes through every resource the player has
@@ -132,6 +123,20 @@ public class Wonder7Card extends Card {
         }
         return true;
     }
+
+    public boolean isFree(AbstractGameState gameState){
+        Wonders7GameState wgs = (Wonders7GameState) gameState;
+        // Checks if the player has prerequisite cards
+        for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
+            for (String prerequisite : wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).prerequisiteCards){
+                if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == prerequisite){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     public HashMap<Wonders7Constants.resources, Integer> empty(){
         HashMap<Wonders7Constants.resources, Integer> empty = new HashMap<>();
