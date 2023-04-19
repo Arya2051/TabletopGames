@@ -35,16 +35,15 @@ public class PlayCard extends DrawCard {
         }
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
-        // Removes the resources paid for card
-        Set<Wonders7Constants.resources> keys = card.constructionCost.keySet();
-        for (Wonders7Constants.resources resource: keys){
-            int cardValue = card.constructionCost.get(resource); // Number of resource the card costs
-            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue - cardValue); // Subtracts the resources cost of the card from the players resource count
+        // Removes coins paid for card
+        if (card.constructionCost.get(Wonders7Constants.resources.coin)!=null) {
+            int cardValue = card.constructionCost.get(Wonders7Constants.resources.coin); // Number of coins the card costs
+            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.coin); // Number of coins the player owns
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(Wonders7Constants.resources.coin, playerValue - cardValue);// Subtracts coins
         }
 
         // Gives player resources produced from card
-        keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
+        Set<Wonders7Constants.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
         for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
             int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
             int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
