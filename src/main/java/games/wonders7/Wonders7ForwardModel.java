@@ -21,6 +21,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     public void _setup(AbstractGameState state){
         Wonders7GameState wgs = (Wonders7GameState) state;
 
+        System.out.println("THE GAME HAS STARTED!");
         wgs.playerHands = new ArrayList<>();
         wgs.playedCards = new ArrayList<>();
         wgs.turnActions = new AbstractAction[wgs.getNPlayers()];
@@ -84,7 +85,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
          if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
              System.out.println("Players resource counts and hands: ");
              for (int i = 0; i < wgs.getNPlayers(); i++) {
-                 System.out.println(wgs.getPlayerWonderBoard(i).toString() + " "+ i + " --> " + wgs.getPlayerResources(i) + " --> " + wgs.getPlayerHand(i) + " --> " + wgs.getPlayedCards(i));
+                 System.out.println(wgs.getPlayerWonderBoard(i).toString() + " "+ i + " --PLAYER RESOURCES--> " + wgs.getPlayerResources(i) + " --PLAYER HAND--> " + wgs.getPlayerHand(i) + " --PLAYED CARDS--> " + wgs.getPlayedCards(i));
              }
             System.out.println("");
          }
@@ -124,7 +125,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                      else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i-1));} // Rotates hands anticlockwise
                  }
              }
-             System.out.println("ROTATING HANDS!!!!!");
+             //System.out.println("ROTATING HANDS!!!!!");
          }
         checkAgeEnd(wgs); // Check for Age end;
     }
@@ -174,7 +175,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         // Create all the possible wonders a player could be assigned
         wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.colossus, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.clay}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{4})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
         //.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
-        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.coin}, new int[]{9}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
+        wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.temple, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.coin}, new int[]{9}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
         wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.pyramids, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{4})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{5}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
         //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.gardens));
         //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.statue));
@@ -289,7 +290,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                     wgs.AgeDeck.add(new Wonder7Card("Town Hall", Wonder7Card.Wonder7CardType.CivilianStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone, Wonders7Constants.resources.ore, Wonders7Constants.resources.glass}, new int[]{2,1,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{6})));
 
                     // MilitaryStructures (Red)
-                    wgs.AgeDeck.add(new Wonder7Card("Arsenal", Wonder7Card.Wonder7CardType.MilitaryStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood, Wonders7Constants.resources.ore, Wonders7Constants.resources.textile}, new int[]{3,1,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{3})));
+                    wgs.AgeDeck.add(new Wonder7Card("Arsenal", Wonder7Card.Wonder7CardType.MilitaryStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood, Wonders7Constants.resources.ore, Wonders7Constants.resources.textile}, new int[]{2,1,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{3})));
                     wgs.AgeDeck.add(new Wonder7Card("Circus", Wonder7Card.Wonder7CardType.MilitaryStructures, createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone, Wonders7Constants.resources.ore}, new int[]{3,1}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{3}), new String[]{"Training Ground"}));
                 }
         }
