@@ -119,6 +119,7 @@ public class Wonders7GameState extends AbstractGameState {
     public double getGameScore(int playerId) {
         return 0;
     }
+    public int getCurrentAge(){return currentAge;}
 
     public Deck<Wonder7Card> getAgeDeck(){return AgeDeck;}
 

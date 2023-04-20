@@ -82,10 +82,10 @@ public class BuildStage extends DrawCard {
         return true;
     }
 
-    public String toString() {
-        return "Built stage " + wonderStage + " using " + cardName;
-    }
+    @Override
+    public String getString(AbstractGameState gameState) {return toString();}
 
+    public String toString() {return "Built stage " + wonderStage + " using " + cardName;}
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -913,7 +913,7 @@ public class Game {
      * and then run this class.
      */
     public static void main(String[] args) {
-        String gameType = Utils.getArg(args, "game", "TerraformingMars");
+        String gameType = Utils.getArg(args, "game", "Wonders7");
         boolean useGUI = Utils.getArg(args, "gui", true);
         int playerCount = Utils.getArg(args, "nPlayers", 2);
         int turnPause = Utils.getArg(args, "turnPause", 0);
@@ -925,7 +925,7 @@ public class Game {
         ArrayList<AbstractPlayer> players = new ArrayList<>(playerCount);
 
         players.add(new RandomPlayer());
-//        players.add(new RandomPlayer());
+        players.add(new RandomPlayer());
 //        players.add(new MCTSPlayer());
 //        MCTSParams params1 = new MCTSParams();
 //        players.add(new MCTSPlayer(params1));

@@ -7,6 +7,8 @@ import games.wonders7.Wonders7GameState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import java.util.Set;
 
 public class Wonder7Card extends Card {
@@ -77,27 +79,48 @@ public class Wonder7Card extends Card {
 
 
 
+ //   @Override
+ //   public String toString() {
+  //      // ADD COSTS
+  //      switch (type) {
+  //          case RawMaterials:
+   //             return  "raw materials:" + " " + cardName;
+   //         case ManufacturedGoods:
+   //             return  "manufactured goods:" + " " + cardName;
+   //         case CivilianStructures:
+   //             return  "civilian structure:" + " " + cardName ;
+   //         case ScientificStructures:
+   //             return "scientific structure:" + " " + cardName;
+   //         case CommercialStructures:
+    //            return "commercial structure:" + " " + cardName;
+    //        case MilitaryStructures:
+    //            return "military structure:" + " " + cardName;
+    //        case Guilds:
+    //            return "guild:" + " " + cardName;
+   //     }
+   //     return null;
+   // }
+
     @Override
     public String toString() {
-        // ADD COSTS
-        switch (type) {
-            case RawMaterials:
-                return  "raw materials:" + " " + cardName;
-            case ManufacturedGoods:
-                return  "manufactured goods:" + " " + cardName;
-            case CivilianStructures:
-                return  "civilian structure:" + " " + cardName ;
-            case ScientificStructures:
-                return "scientific structure:" + " " + cardName;
-            case CommercialStructures:
-                return "commercial structure:" + " " + cardName;
-            case MilitaryStructures:
-                return "military structure:" + " " + cardName;
-            case Guilds:
-                return "guild:" + " " + cardName;
-        }
-        return null;
+        String cost = mapToStr(constructionCost);
+        String makes = mapToStr(manufacturedGoods);
+        return "{" + cardName +
+                "(" + type + ")" +
+                (!cost.equals("") ? ":cost=" + cost : ",free") +
+                (!makes.equals("") ? ",makes=" + makes : "") + "}  ";
     }
+
+    private String mapToStr(HashMap<Wonders7Constants.resources, Integer> m) {
+        String s = "";
+        for (Map.Entry<Wonders7Constants.resources, Integer> e: m.entrySet()) {
+            if (e.getValue() > 0) s += e.getValue() + " " + e.getKey() + ",";
+        }
+        s += "]";
+        if (s.equals("]")) return "";
+        return s.replace(",]", "");
+    }
+
 
     @Override
     public Wonder7Card copy(){
@@ -129,7 +152,8 @@ public class Wonder7Card extends Card {
         // Checks if the player has prerequisite cards
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
             for (String prerequisite : wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).prerequisiteCards){
-                if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == prerequisite){
+                if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(prerequisite)){
+                    System.out.println("OMG HE GOT DA PRE CARD!!!! OMOMMOMOGOMGOMGOMGOG"+prerequisite);
                     return true;
                 }
             }

@@ -6,6 +6,7 @@ import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -84,22 +85,43 @@ public class Wonder7Board extends Card {
         }
     }
 
+//    @Override
+//    public String toString() {
+//        switch (type) {
+//            case colossus:
+ //           case temple:
+ //           case lighthouse:
+ //           case gardens:
+ //           case statue:
+ //           case mausoleum:
+ //           case pyramids:
+ //               return wonderName;
+ //       }
+//        return "null";
+ //   }
+
     @Override
     public String toString() {
-        switch (type) {
-            case colossus:
-            case temple:
-            case lighthouse:
-            case gardens:
-            case statue:
-            case mausoleum:
-            case pyramids:
-                return wonderName;
+        String stages = "";
+        for (int i = 0; i < stageProduce.size(); i++) {
+            String cost = mapToStr(constructionCosts.get(i));
+            String makes = mapToStr(stageProduce.get(i));
+            stages += "{" + (i+1) + ":" + (!cost.equals("") ? "cost=" + cost : "free")  + (!cost.equals("") && !makes.equals("")?"," : "") + (!makes.equals("")? "makes=" + makes : "") + "}  ";
+            if (i != stageProduce.size()-1) stages += ", ";
         }
-        return "null";
+        return wonderName + (effectUsed ? "(used)" : "") + "[" + (wonderStage-1) + "]" +
+                ",makes=" + mapToStr(manufacturedGoods) + " " + stages;
     }
 
-
+    private String mapToStr(HashMap<Wonders7Constants.resources, Integer> m) {
+        String s = "";
+        for (Map.Entry<Wonders7Constants.resources, Integer> e: m.entrySet()) {
+            if (e.getValue() > 0) s += e.getValue() + " " + e.getKey() + ",";
+        }
+        s += "]";
+        if (s.equals("]")) return "";
+        return s.replace(",]", "");
+    }
 
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;

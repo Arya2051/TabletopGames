@@ -56,6 +56,9 @@ import games.virus.VirusForwardModel;
 import games.virus.VirusGameState;
 import games.dicemonastery.*;
 import games.dominion.*;
+import games.wonders7.Wonders7ForwardModel;
+import games.wonders7.Wonders7GameState;
+import games.wonders7.gui.Wonders7GUI;
 import gui.*;
 import players.human.ActionController;
 import players.human.HumanGUIPlayer;
@@ -312,7 +315,8 @@ public enum GameType {
             new ArrayList<Mechanic>() {{
                 add(PushYourLuck);
             }}
-    );
+    ),
+    Wonders7(3,7, new ArrayList<>(), new ArrayList<>());
 
     /**
      * Converts a given string to the enum type corresponding to the game.
@@ -365,6 +369,8 @@ public enum GameType {
                 return Stratego;
             case "cantstop":
                 return CantStop;
+            case "wonders7":
+                return Wonders7;
         }
         System.out.println("Game type not found, returning null. ");
         return null;
@@ -476,6 +482,10 @@ public enum GameType {
                 forwardModel = new CantStopForwardModel();
                 gameState = new CantStopGameState(params, nPlayers);
                 break;
+            case Wonders7:
+                forwardModel = new Wonders7ForwardModel();
+                gameState = new Wonders7GameState(params, nPlayers);
+                break;
             default:
                 throw new AssertionError("Game not yet supported : " + this);
         }
@@ -566,6 +576,9 @@ public enum GameType {
                 break;
             case CantStop:
                 gui = new CantStopGUIManager(parent, game, ac);
+                break;
+            case Wonders7:
+                gui = new Wonders7GUI(parent, game, ac);
                 break;
         }
 
