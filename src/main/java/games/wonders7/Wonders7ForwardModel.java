@@ -89,16 +89,13 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
          }
 
          // PLAYERS SELECT A CARD
-         if (wgs.getTurnAction(wgs.getNPlayers()-1) == null && wgs.currentAge!=2) { // CHOOSE ACTIONS
-            wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
-            wgs.getTurnOrder().endPlayerTurn(wgs);
-         }
-         else if (wgs.getTurnAction((wgs.getNPlayers()+1)% wgs.getNPlayers()) == null && wgs.currentAge==2){
+         if ((wgs.getTurnAction(wgs.getNPlayers()-1)==null && wgs.currentAge!=2) || (wgs.getTurnAction((wgs.getNPlayers()+1)%wgs.getNPlayers())==null && wgs.currentAge==2)){ // When turn order is clockwise/anticlockwise
              wgs.setTurnAction(wgs.getCurrentPlayer(), action); // PLAYER CHOOSES ACTION
              wgs.getTurnOrder().endPlayerTurn(wgs);
          }
-        // EVERYBODY NOW PLAYS THEIR CARDS
-        else if (wgs.getTurnAction(wgs.getNPlayers()-1) != null) { // ACTION ROUND
+
+        // EVERYBODY NOW PLAYS THEIR CARDS (ACTION ROUND)
+        else if (wgs.getTurnAction(wgs.getNPlayers()-1) != null) {
             for (int i = 0; i < wgs.getNPlayers(); i++) {
                 wgs.getTurnOrder().setTurnOwner(i); // PLAYER i DOES THE ACTION THEY SELECTED, NOT ANOTHER PLAYERS ACTION
                 System.out.println("PLAYER " + wgs.getCurrentPlayer() + " PLAYED: " + wgs.getTurnAction(wgs.getCurrentPlayer()).toString()); // SAYS WHAT ACTION PLAYER i CHOSE!
@@ -124,8 +121,9 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                  }
              }
              //System.out.println("ROTATING HANDS!!!!!");
+             checkAgeEnd(wgs); // Check for Age end;
+
          }
-        checkAgeEnd(wgs); // Check for Age end;
     }
 
     @Override
@@ -334,7 +332,14 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
     protected void checkAgeEnd(AbstractGameState gameState){
         Wonders7GameState wgs = (Wonders7GameState) gameState;
-        if (wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize() == 0){  // If all players hands are empty
+
+        if (wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize() == 1){  // If all players hands are empty
+
+            for (int i=0; i< wgs.getNPlayers(); i++){
+                wgs.getDiscardPile().add(wgs.getPlayerHand(i).get(0));
+                wgs.getPlayerHand(i).remove(0);
+            }
+
             wgs.getTurnOrder().endRound(wgs); // Ends the round,
             ((Wonders7TurnOrder) wgs.getTurnOrder()).reverse(); // Turn Order reverses at end of Age
 
