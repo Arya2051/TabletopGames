@@ -31,9 +31,9 @@ public class Wonder7Board extends Card {
     public final wonder type;
     public boolean effectUsed;
     public int wonderStage;
-    public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Resources the card creates
-    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts;
-    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce;
+    public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Default wonder production
+    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts; // Cost of each stage
+    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce; // Production of each stage
 
     public Wonder7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce) {
         this.type = type;
@@ -42,7 +42,7 @@ public class Wonder7Board extends Card {
         for (HashMap<Wonders7Constants.resources, Integer> cost : constructionCosts){this.constructionCosts.add(cost);}
         for (HashMap<Wonders7Constants.resources, Integer> produce : stageProduce){this.stageProduce.add(produce);}
         this.wonderStage = 1;
-        this.effectUsed = false;
+        this.effectUsed = true;
 
         switch (type){
             case colossus:

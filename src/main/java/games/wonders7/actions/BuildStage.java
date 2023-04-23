@@ -35,32 +35,15 @@ public class BuildStage extends DrawCard {
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
 
-
         // FOR SECOND STAGE UNIQUE EFFECTS   ***** THIS WHOLE SECTION MAKES NO SENSE
-        if (!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed){
+        if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage == 2){
             Wonder7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
             switch (board.type){
                 case lighthouse:
                 case mausoleum:
                 case gardens:
-                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = true;
-                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
-                    return true;
                 case statue:
-                    // Gives player resources produced from card
-                    Set<Wonders7Constants.resources> keys = card.manufacturedGoods.keySet(); // Gets all the resources the card provides
-                    for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
-                        int cardValue = card.manufacturedGoods.get(resource); // Number of resource the card provides
-                        int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-                        wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue + cardValue); // Adds the resources provided by the card to the players resource count
-                    }
-
-                    // remove the card from the players hand to the playedDeck
-                    wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
-                    wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
-                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = true;
-                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
-                    return true;
+                    wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = false;
                 default:
                     break;
             }}

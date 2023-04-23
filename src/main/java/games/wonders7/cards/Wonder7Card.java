@@ -149,11 +149,18 @@ public class Wonder7Card extends Card {
 
     public boolean isFree(AbstractGameState gameState){
         Wonders7GameState wgs = (Wonders7GameState) gameState;
-        // Checks if the player has prerequisite cards
+
+        // Checks if the player has an identical structure
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            for (String prerequisite : wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).prerequisiteCards){
-                if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(prerequisite)){
-                    System.out.println("OMG HE GOT DA PRE CARD!!!! OMOMMOMOGOMGOMGOMGOG"+prerequisite);
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+                return false;
+            }
+        }
+
+        // Checks if the player has prerequisite cards
+        for (String prerequisite : prerequisiteCards){
+            for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
+                if (prerequisite.equals(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName)){
                     return true;
                 }
             }
