@@ -5,7 +5,6 @@ import core.components.Card;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,46 +33,46 @@ public class Wonder7Card extends Card {
     public final Wonder7CardType type;  // Different type of cards, brown cards, grey cards...)
     public final String cardName; // Name of card
     public final HashMap<Wonders7Constants.resources, Integer> constructionCost; // The resources required to construct structure
-    public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Resources the card creates
+    public final HashMap<Wonders7Constants.resources, Integer> resourcesProduced; // Resources the card creates
     //public final HashMap<Wonder7Card, Integer> prerequisite; // THE STRUCTURES REQUIRED TO BUILD CARD FOR FREE
     public final String[] prerequisiteCards;
 
     // A normal card with construction cost, produces resources
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods) {
+    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced) {
         super(name);
         this.cardName = name;
         this.type = type;
         this.constructionCost = constructionCost;
-        this.manufacturedGoods = manufacturedGoods;
+        this.resourcesProduced = resourcesProduced;
         this.prerequisiteCards = new String[0];
     }
 
     // Card has prerequisite cards
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods, String[] prerequisiteCards) {
+    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String[] prerequisiteCards) {
         super(name);
         this.cardName = name;
         this.type = type;
         this.constructionCost = constructionCost;
-        this.manufacturedGoods = manufacturedGoods;
+        this.resourcesProduced = resourcesProduced;
         this.prerequisiteCards = prerequisiteCards;
     }
 
     // A free card (no construction cost)
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods){
+    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> resourcesProduced){
         super(name);
         this.cardName = name;
         this.type = type;
         this.constructionCost = empty(); // Card costs nothing
-        this.manufacturedGoods = manufacturedGoods;
+        this.resourcesProduced = resourcesProduced;
         this.prerequisiteCards = new String[0];
     }
 
-    protected Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> manufacturedGoods, String[] prerequisiteCards, int componentID){
+    protected Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String[] prerequisiteCards, int componentID){
         super(name, componentID);
         this.cardName = name;
         this.type = type;
         this.constructionCost = constructionCost;
-        this.manufacturedGoods = manufacturedGoods;
+        this.resourcesProduced = resourcesProduced;
         this.prerequisiteCards = prerequisiteCards;
     }
 
@@ -104,7 +103,7 @@ public class Wonder7Card extends Card {
     @Override
     public String toString() {
         String cost = mapToStr(constructionCost);
-        String makes = mapToStr(manufacturedGoods);
+        String makes = mapToStr(resourcesProduced);
         return "{" + cardName +
                 "(" + type + ")" +
                 (!cost.equals("") ? ":cost=" + cost : ",free") +
@@ -124,7 +123,7 @@ public class Wonder7Card extends Card {
 
     @Override
     public Wonder7Card copy(){
-        return new Wonder7Card(cardName, type, constructionCost, manufacturedGoods,prerequisiteCards, componentID);
+        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced,prerequisiteCards, componentID);
     }
 
     // Checks if player can pay the cost of the card or if the player is allowed to build the structure
@@ -198,25 +197,25 @@ public class Wonder7Card extends Card {
 
         HashMap<Wonders7Constants.resources, Integer> neighbourResources = new HashMap<>(); // Resources offered by the neighbour
         // Resources provided by neighbour's wonder
-        key = wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).manufacturedGoods.keySet();
+        key = wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).resourcesProduced.keySet();
         for (Wonders7Constants.resources resource : key) {
-            neighbourResources.put(resource, wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).manufacturedGoods.get(resource));
+            neighbourResources.put(resource, wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).resourcesProduced.get(resource));
         }
         // Resources provided by neighbour's raw materials
         for (int i=0;i<wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).getSize();i++){
             if ((wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).type==Wonder7CardType.RawMaterials)){
-                key = wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).manufacturedGoods.keySet();
+                key = wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).resourcesProduced.keySet();
                 for (Wonders7Constants.resources resource : key) {
-                    neighbourResources.put(resource, wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).manufacturedGoods.get(resource));
+                    neighbourResources.put(resource, wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).resourcesProduced.get(resource));
                 }
             }
         }
         // Resources provided by neighbour's manufactured goods
         for (int i=0;i<wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).getSize();i++){
             if ((wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).type==Wonder7CardType.ManufacturedGoods)){
-                key = wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).manufacturedGoods.keySet();
+                key = wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).resourcesProduced.keySet();
                 for (Wonders7Constants.resources resource : key) {
-                    neighbourResources.put(resource, wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).manufacturedGoods.get(resource));
+                    neighbourResources.put(resource, wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).resourcesProduced.get(resource));
                 }
             }
         }
@@ -268,25 +267,25 @@ public class Wonder7Card extends Card {
 
         HashMap<Wonders7Constants.resources, Integer> neighbourResources = new HashMap<>(); // Resources offered by the neighbour
         // Resources provided by neighbour's wonder
-        key = wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).manufacturedGoods.keySet();
+        key = wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).resourcesProduced.keySet();
         for (Wonders7Constants.resources resource : key) {
-            neighbourResources.put(resource, wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).manufacturedGoods.get(resource));
+            neighbourResources.put(resource, wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).resourcesProduced.get(resource));
         }
         // Resources provided by neighbour's raw materials
         for (int i=0;i<wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).getSize();i++){
             if ((wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).type==Wonder7CardType.RawMaterials)){
-                key = wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).manufacturedGoods.keySet();
+                key = wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).resourcesProduced.keySet();
                 for (Wonders7Constants.resources resource : key) {
-                    neighbourResources.put(resource, wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).manufacturedGoods.get(resource));
+                    neighbourResources.put(resource, wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).resourcesProduced.get(resource));
                 }
             }
         }
         // Resources provided by neighbour's manufactured goods
         for (int i=0;i<wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).getSize();i++){
             if ((wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).type==Wonder7CardType.ManufacturedGoods)){
-                key = wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).manufacturedGoods.keySet();
+                key = wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).resourcesProduced.keySet();
                 for (Wonders7Constants.resources resource : key) {
-                    neighbourResources.put(resource, wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).manufacturedGoods.get(resource));
+                    neighbourResources.put(resource, wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).resourcesProduced.get(resource));
                 }
             }
         }

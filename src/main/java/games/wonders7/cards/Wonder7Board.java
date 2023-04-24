@@ -31,7 +31,7 @@ public class Wonder7Board extends Card {
     public final wonder type;
     public boolean effectUsed;
     public int wonderStage;
-    public final HashMap<Wonders7Constants.resources, Integer> manufacturedGoods; // Default wonder production
+    public final HashMap<Wonders7Constants.resources, Integer> resourcesProduced; // Default wonder production
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts; // Cost of each stage
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce; // Production of each stage
 
@@ -47,40 +47,40 @@ public class Wonder7Board extends Card {
         switch (type){
             case colossus:
                 this.wonderName = "The Colossus of Rhodes          ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.ore, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.ore, 1);
                 break;
             case lighthouse:
                 this.wonderName = "The Lighthouse of Alexandria    ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.glass, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.glass, 1);
                 break;
             case temple:
                 this.wonderName = "The Temple of Artemis in Ephesus";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.papyrus, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.papyrus, 1);
                 break;
             case gardens:
                 this.wonderName = "The Hanging Gardens of Babylon  ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.clay, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.clay, 1);
                 break;
             case statue:
                 this.wonderName = "The Statue of Zeus in Olympia   ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.wood, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.wood, 1);
                 break;
             case mausoleum:
                 this.wonderName = "The Mausoleum of Halicarnassus  ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.textile, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.textile, 1);
                 break;
             case pyramids:
                 this.wonderName = "The Pyramids of Giza            ";
-                this.manufacturedGoods = new HashMap<>();
-                this.manufacturedGoods.put(Wonders7Constants.resources.stone, 1);
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.stone, 1);
                 break;
-            default: this.wonderName = ""; this.manufacturedGoods = new HashMap<>();
+            default: this.wonderName = ""; this.resourcesProduced = new HashMap<>();
             break;
         }
     }
@@ -110,7 +110,7 @@ public class Wonder7Board extends Card {
             if (i != stageProduce.size()-1) stages += ", ";
         }
         return wonderName + (effectUsed ? "(used)" : "") + "[" + (wonderStage-1) + "]" +
-                ",makes=" + mapToStr(manufacturedGoods) + " " + stages;
+                ",makes=" + mapToStr(resourcesProduced) + " " + stages;
     }
 
     private String mapToStr(HashMap<Wonders7Constants.resources, Integer> m) {
