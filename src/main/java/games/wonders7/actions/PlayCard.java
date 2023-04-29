@@ -1,6 +1,7 @@
 package games.wonders7.actions;
 
 import core.AbstractGameState;
+import core.actions.AbstractAction;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
@@ -78,4 +79,7 @@ public class PlayCard extends DrawCard {
     public int hashCode() {
         return Objects.hash(super.hashCode(), cardName);
     }
+
+    @Override
+    public AbstractAction copy(){return new PlayCard(cardName);}
 }
