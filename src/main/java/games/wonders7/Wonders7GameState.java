@@ -9,16 +9,13 @@ import core.components.Deck;
 import games.wonders7.cards.Wonder7Card;
 import games.wonders7.cards.Wonder7Board;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static games.GameType.Wonders7;
 
 public class Wonders7GameState extends AbstractGameState {
 
     int currentAge; // int from 1,2,3 of current age
-    int[] playerVictoryPoints;
     List<HashMap<Wonders7Constants.resources, Integer>> playerResources;
     List<Deck<Wonder7Card>> playerHands; // 7 Cards player has to choose from
     List<Deck<Wonder7Card>> playedCards; // Player used cards
@@ -63,8 +60,6 @@ public class Wonders7GameState extends AbstractGameState {
         // Including components that player with the given ID will see.
         // For example, some decks may be face down and unobservable to the player
         // All the components in the observation should be copies of those in the game state
-        // (pay attention to any references that need reassigning)
-        // For more detail see Hiding information
         Wonders7GameState copy = new Wonders7GameState(gameParameters.copy(), getNPlayers());
         copy.playerResources = new ArrayList<>();
         copy.playerHands = new ArrayList<>();
@@ -84,8 +79,8 @@ public class Wonders7GameState extends AbstractGameState {
         copy.AgeDeck = AgeDeck.copy();
         copy.discardPile = discardPile.copy();
         copy.currentAge = currentAge;
-        copy.playerWonderBoard = playerWonderBoard;
-        copy.turnActions = turnActions;
+        copy.playerWonderBoard = playerWonderBoard.clone();
+        copy.turnActions = turnActions.clone();
 
         return copy;
     }
@@ -93,11 +88,25 @@ public class Wonders7GameState extends AbstractGameState {
     public void _reset(){
         // reset any variables that would have been changed 
         // (and not directly reset in the ForwardModel._setup() method) to their initial state
+
     }
 
     @Override
     protected boolean _equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (!(o instanceof Wonders7GameState)) return false;
+        if (!super.equals(o)) return false;
+        Wonders7GameState that = (Wonders7GameState) o;
+        return Objects.equals(playerResources, that.playerResources) &&
+                Objects.equals(playerHands, that.playerHands) &&
+                Objects.equals(playedCards, that.playedCards) &&
+                Objects.equals(AgeDeck, that.AgeDeck) &&
+                Objects.equals(discardPile, that.discardPile) &&
+                Objects.equals(wonderBoardDeck, that.wonderBoardDeck) &&
+                Arrays.equals(playerWonderBoard, that.playerWonderBoard) &&
+                Arrays.equals(turnActions, that.turnActions)&&
+                currentAge == that.currentAge;
+
     }
 
     int _getGameScore(int playerId){

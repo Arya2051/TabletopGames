@@ -1,5 +1,6 @@
 package games.wonders7;
 
+import core.AbstractGameState;
 import core.AbstractParameters;
 
 public class Wonders7GameParameters extends AbstractParameters {
@@ -29,7 +30,10 @@ public class Wonders7GameParameters extends AbstractParameters {
 
     @Override
     protected boolean _equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (!(o instanceof Wonders7GameParameters)) return false;
+        if (!super.equals(o)) return false;
+        Wonders7GameParameters that = (Wonders7GameParameters) o;
+        return nWonderCardsPerPlayer == that.nWonderCardsPerPlayer;
     }
-
 }
