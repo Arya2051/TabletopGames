@@ -194,7 +194,9 @@ public class Wonder7Board extends Card {
 
     @Override
     public Wonder7Board copy(){
-        return new Wonder7Board(type, constructionCosts, stageProduce, componentID);
+        Wonder7Board board =  new Wonder7Board(type, constructionCosts, stageProduce, componentID);
+        board.wonderStage = wonderStage;
+        return board;
     }
 
 }
