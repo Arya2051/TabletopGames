@@ -36,6 +36,7 @@ public class Wonder7Board extends Card {
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce; // Production of each stage
 
     public Wonder7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce) {
+        super(type.toString());
         this.type = type;
         this.constructionCosts = new ArrayList<>();
         this.stageProduce = new ArrayList<>();
@@ -82,6 +83,57 @@ public class Wonder7Board extends Card {
                 break;
             default: this.wonderName = ""; this.resourcesProduced = new HashMap<>();
             break;
+        }
+    }
+
+    public Wonder7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce, int componentID) {
+        super(type.toString(),componentID);
+        this.type = type;
+        this.constructionCosts = new ArrayList<>();
+        this.stageProduce = new ArrayList<>();
+        for (HashMap<Wonders7Constants.resources, Integer> cost : constructionCosts){this.constructionCosts.add(cost);}
+        for (HashMap<Wonders7Constants.resources, Integer> produce : stageProduce){this.stageProduce.add(produce);}
+        this.wonderStage = 1;
+        this.effectUsed = true;
+
+        switch (type){
+            case colossus:
+                this.wonderName = "The Colossus of Rhodes          ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.ore, 1);
+                break;
+            case lighthouse:
+                this.wonderName = "The Lighthouse of Alexandria    ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.glass, 1);
+                break;
+            case temple:
+                this.wonderName = "The Temple of Artemis in Ephesus";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.papyrus, 1);
+                break;
+            case gardens:
+                this.wonderName = "The Hanging Gardens of Babylon  ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.clay, 1);
+                break;
+            case statue:
+                this.wonderName = "The Statue of Zeus in Olympia   ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.wood, 1);
+                break;
+            case mausoleum:
+                this.wonderName = "The Mausoleum of Halicarnassus  ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.textile, 1);
+                break;
+            case pyramids:
+                this.wonderName = "The Pyramids of Giza            ";
+                this.resourcesProduced = new HashMap<>();
+                this.resourcesProduced.put(Wonders7Constants.resources.stone, 1);
+                break;
+            default: this.wonderName = ""; this.resourcesProduced = new HashMap<>();
+                break;
         }
     }
 
@@ -138,6 +190,11 @@ public class Wonder7Board extends Card {
 
     public void changeStage(){
         wonderStage +=1;
+    }
+
+    @Override
+    public Wonder7Board copy(){
+        return new Wonder7Board(type, constructionCosts, stageProduce, componentID);
     }
 
 }

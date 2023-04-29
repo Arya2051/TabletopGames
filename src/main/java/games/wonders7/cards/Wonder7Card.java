@@ -121,11 +121,6 @@ public class Wonder7Card extends Card {
     }
 
 
-    @Override
-    public Wonder7Card copy(){
-        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced,prerequisiteCards, componentID);
-    }
-
     // Checks if player can pay the cost of the card or if the player is allowed to build the structure
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
@@ -313,7 +308,10 @@ public class Wonder7Card extends Card {
         return empty;
     }
 
-
+    @Override
+    public Card copy(){
+        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced,prerequisiteCards, componentID);
+    }
 
 }
 
