@@ -50,6 +50,7 @@ public class FreeCard extends DrawCard {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Free card " + cardName;
     }

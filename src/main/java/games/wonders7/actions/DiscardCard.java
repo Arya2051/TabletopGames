@@ -43,6 +43,7 @@ public class DiscardCard extends DrawCard {
 
 
 
+    @Override
     public String toString() {
         return "Discard card " + cardName;
     }

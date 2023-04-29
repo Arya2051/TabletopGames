@@ -71,6 +71,7 @@ public class BuyResourceL extends DrawCard {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Buy resources for card " + cardName + " from left-hand neighbour " ;
     }

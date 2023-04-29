@@ -62,13 +62,15 @@ public class BuildStage extends DrawCard {
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
         wgs.getDiscardPile().add(card);
 
-        wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // stage is no longer buildable
+        wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).changeStage(); // Increases wonderstage value to the next stage
         return true;
     }
 
     @Override
     public String getString(AbstractGameState gameState) {return toString();}
 
+
+    @Override
     public String toString() {return "Built stage " + wonderStage + " using " + cardName;}
     @Override
     public boolean equals(Object o) {
@@ -76,7 +78,8 @@ public class BuildStage extends DrawCard {
         if (!(o instanceof Wonder7Card)) return false;
         if (!super.equals(o)) return false;
         BuildStage buildStage = (BuildStage) o;
-        return Objects.equals(cardName, buildStage.cardName);
+        return Objects.equals(cardName, buildStage.cardName) &&
+                wonderStage == buildStage.wonderStage;
     }
 
     @Override

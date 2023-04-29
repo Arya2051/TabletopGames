@@ -70,7 +70,7 @@ public class BuyResourceR extends DrawCard {
         wgs.getPlayedCards(wgs.getCurrentPlayer()).add(card);
         return true;
     }
-
+    @Override
     public String toString() {
         return "Buy resources for card " + cardName + " from right-hand neighbour " ;
     }

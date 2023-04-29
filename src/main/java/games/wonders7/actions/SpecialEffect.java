@@ -63,6 +63,7 @@ public class SpecialEffect extends DrawCard {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Special Effect " + cardName;
     }
