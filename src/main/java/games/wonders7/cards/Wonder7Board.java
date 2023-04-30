@@ -5,10 +5,7 @@ import core.components.Card;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class Wonder7Board extends Card {
     public enum wonder {
@@ -198,5 +195,18 @@ public class Wonder7Board extends Card {
         board.wonderStage = wonderStage;
         return board;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Wonder7Board) {
+            Wonder7Board card = (Wonder7Board) o;
+            return card.wonderName.equals(wonderName) &&
+                    card.wonderStage == wonderStage;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){return Objects.hash(super.hashCode(), wonderName); }
 
 }

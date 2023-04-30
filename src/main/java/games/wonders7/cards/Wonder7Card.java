@@ -8,6 +8,7 @@ import games.wonders7.Wonders7GameState;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class Wonder7Card extends Card {
@@ -313,5 +314,16 @@ public class Wonder7Card extends Card {
         return new Wonder7Card(cardName, type, constructionCost, resourcesProduced,prerequisiteCards, componentID);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Wonder7Card) {
+            Wonder7Card card = (Wonder7Card) o;
+            return card.cardName.equals(cardName) &&
+                    card.type == type;}
+        return false;
+    }
+
+    @Override
+    public int hashCode(){return Objects.hash(super.hashCode(), cardName); }
 }
 
