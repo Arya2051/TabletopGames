@@ -22,7 +22,6 @@ class Wonders7TurnOrder extends AlternatingTurnOrder {
 
     @Override
     protected TurnOrder _copy() {
-
         return new Wonders7TurnOrder(nPlayers);
     }
 
