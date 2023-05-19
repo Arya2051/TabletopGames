@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class SpecialEffect extends DrawCard {
 
-    private String cardName;
+    public String cardName;
 
     // Player chooses card to play
     public SpecialEffect(String cardName){

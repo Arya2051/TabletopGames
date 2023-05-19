@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class DiscardCard extends DrawCard {
-    private String cardName;
+    public String cardName;
 
     public DiscardCard(String cardName){
         this.cardName = cardName;

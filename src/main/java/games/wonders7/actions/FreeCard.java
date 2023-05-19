@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class FreeCard extends DrawCard {
 
-    private String cardName;
+    public String cardName;
 
     // Player chooses card to play
     public FreeCard(String cardName){

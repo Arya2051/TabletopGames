@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class BuyResourceL extends DrawCard {
 
-    private String cardName;
+    public String cardName;
 
     // Player chooses card to play
     public BuyResourceL(String cardName){

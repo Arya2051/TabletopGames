@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class BuildStage extends DrawCard {
-    private String cardName;
+    public String cardName;
     private int wonderStage;
 
     public BuildStage(String cardName, int wonderStage){
@@ -36,7 +36,7 @@ public class BuildStage extends DrawCard {
         Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
 
 
-        // FOR SECOND STAGE UNIQUE EFFECTS   ***** THIS WHOLE SECTION MAKES NO SENSE
+        // The second stage has been built, now the player can play their special action (if they have the wonder)
         if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage == 2){
             Wonder7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
             switch (board.type){
