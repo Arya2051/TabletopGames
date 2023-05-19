@@ -193,6 +193,7 @@ public class Wonder7Board extends Card {
     public Wonder7Board copy(){
         Wonder7Board board =  new Wonder7Board(type, constructionCosts, stageProduce, componentID);
         board.wonderStage = wonderStage;
+        board.effectUsed = effectUsed;
         return board;
     }
 
