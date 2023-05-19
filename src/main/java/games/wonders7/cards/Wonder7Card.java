@@ -36,7 +36,7 @@ public class Wonder7Card extends Card {
     public final HashMap<Wonders7Constants.resources, Integer> constructionCost; // The resources required to construct structure
     public final HashMap<Wonders7Constants.resources, Integer> resourcesProduced; // Resources the card creates
     //public final HashMap<Wonder7Card, Integer> prerequisite; // THE STRUCTURES REQUIRED TO BUILD CARD FOR FREE
-    public final String[] prerequisiteCards;
+    public final String prerequisiteCard;
 
     // A normal card with construction cost, produces resources
     public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced) {
@@ -45,17 +45,17 @@ public class Wonder7Card extends Card {
         this.type = type;
         this.constructionCost = constructionCost;
         this.resourcesProduced = resourcesProduced;
-        this.prerequisiteCards = new String[0];
+        this.prerequisiteCard = "";
     }
 
     // Card has prerequisite cards
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String[] prerequisiteCards) {
+    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard) {
         super(name);
         this.cardName = name;
         this.type = type;
         this.constructionCost = constructionCost;
         this.resourcesProduced = resourcesProduced;
-        this.prerequisiteCards = prerequisiteCards;
+        this.prerequisiteCard = prerequisiteCard;
     }
 
     // A free card (no construction cost)
@@ -65,16 +65,17 @@ public class Wonder7Card extends Card {
         this.type = type;
         this.constructionCost = empty(); // Card costs nothing
         this.resourcesProduced = resourcesProduced;
-        this.prerequisiteCards = new String[0];
+        this.prerequisiteCard = "";
     }
 
-    protected Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String[] prerequisiteCards, int componentID){
+
+    protected Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard, int componentID){
         super(name, componentID);
         this.cardName = name;
         this.type = type;
         this.constructionCost = constructionCost;
         this.resourcesProduced = resourcesProduced;
-        this.prerequisiteCards = prerequisiteCards;
+        this.prerequisiteCard = prerequisiteCard;
     }
 
 
@@ -142,7 +143,7 @@ public class Wonder7Card extends Card {
         return true;
     }
 
-    // Checks if the card is free
+    // Checks if the card is free using pre-requisite card
     public boolean isFree(AbstractGameState gameState){
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
@@ -154,13 +155,11 @@ public class Wonder7Card extends Card {
         }
 
         // Checks if the player has prerequisite cards
-        for (String prerequisite : prerequisiteCards){
             for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-                if (prerequisite.equals(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName)){
+                if (prerequisiteCard.equals(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName)){
                     return true;
                 }
             }
-        }
         return false;
     }
 
@@ -311,7 +310,7 @@ public class Wonder7Card extends Card {
 
     @Override
     public Card copy(){
-        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced,prerequisiteCards, componentID);
+        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced, prerequisiteCard, componentID);
     }
 
     @Override
@@ -322,6 +321,11 @@ public class Wonder7Card extends Card {
                     card.type == type;}
         return false;
     }
+
+    public Wonder7CardType getCardType(){
+        return type;
+    }
+
 
     @Override
     public int hashCode(){return Objects.hash(super.hashCode(), cardName); }
