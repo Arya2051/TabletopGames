@@ -5,8 +5,8 @@ import core.actions.AbstractAction;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
-import games.wonders7.cards.Wonder7Board;
-import games.wonders7.cards.Wonder7Card;
+import games.wonders7.cards.Wonders7Board;
+import games.wonders7.cards.Wonders7Card;
 
 import java.util.Objects;
 import java.util.Set;
@@ -26,19 +26,11 @@ public class BuildStage extends DrawCard {
         super.execute(gameState);
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
-        // Finds the played card
-        int index=0; // The index of the card in hand
-        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
-            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
-                index = i;
-            }
-        }
-        Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
-
+        Wonders7Card card = findCard(wgs); // Card being selected
 
         // The second stage has been built, now the player can play their special action (if they have the wonder)
         if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage == 2){
-            Wonder7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
+            Wonders7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
             switch (board.type){
                 case lighthouse:
                 case mausoleum:
@@ -66,16 +58,26 @@ public class BuildStage extends DrawCard {
         return true;
     }
 
+    public Wonders7Card findCard(Wonders7GameState wgs){
+        // Finds the played card
+        int index=0; // The index of the card in hand
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
+            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
+                index = i;
+            }
+        }
+        return wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
+    }
+
     @Override
     public String getString(AbstractGameState gameState) {return toString();}
-
 
     @Override
     public String toString() {return "Built stage " + wonderStage + " using " + cardName;}
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonder7Card)) return false;
+        if (!(o instanceof Wonders7Card)) return false;
         if (!super.equals(o)) return false;
         BuildStage buildStage = (BuildStage) o;
         return Objects.equals(cardName, buildStage.cardName) &&

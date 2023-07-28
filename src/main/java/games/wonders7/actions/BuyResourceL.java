@@ -5,7 +5,7 @@ import core.actions.AbstractAction;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
-import games.wonders7.cards.Wonder7Card;
+import games.wonders7.cards.Wonders7Card;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -28,14 +28,7 @@ public class BuyResourceL extends DrawCard {
         super.execute(gameState);
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
-        // Finds the played card
-        int index=0; // The index of the card in hand
-        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
-            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
-                index = i;
-            }
-        }
-        Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
+        Wonders7Card card = findCard(wgs); // Card being selected
 
         // Collects the resources player does not have
         Set<Wonders7Constants.resources> key = card.constructionCost.keySet();
@@ -71,6 +64,17 @@ public class BuyResourceL extends DrawCard {
         return true;
     }
 
+    public Wonders7Card findCard(Wonders7GameState wgs){
+        // Finds the played card
+        int index=0; // The index of the card in hand
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
+            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
+                index = i;
+            }
+        }
+        return wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
+    }
+
     @Override
     public String toString() {
         return "Buy resources for card " + cardName + " from left-hand neighbour " ;
@@ -84,7 +88,7 @@ public class BuyResourceL extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonder7Card)) return false;
+        if (!(o instanceof Wonders7Card)) return false;
         if (!super.equals(o)) return false;
         BuyResourceL buyResourceL = (BuyResourceL) o;
         return Objects.equals(cardName, buyResourceL.cardName);

@@ -5,7 +5,7 @@ import core.actions.AbstractAction;
 import core.actions.DrawCard;
 import games.wonders7.Wonders7Constants;
 import games.wonders7.Wonders7GameState;
-import games.wonders7.cards.Wonder7Card;
+import games.wonders7.cards.Wonders7Card;
 
 import java.util.Objects;
 import java.util.Set;
@@ -27,14 +27,8 @@ public class PlayCard extends DrawCard {
         super.execute(gameState);
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
-        // Finds the played card
-        int index=0; // The index of the card in hand
-        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
-            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
-                index = i;
-            }
-        }
-        Wonder7Card card = wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
+
+        Wonders7Card card = findCard(wgs); // Card being selected
 
         // Removes coins paid for card
         if (card.constructionCost.get(Wonders7Constants.resources.coin)!=null) {
@@ -57,6 +51,17 @@ public class PlayCard extends DrawCard {
         return true;
     }
 
+    public Wonders7Card findCard(Wonders7GameState wgs){
+        // Finds the played card
+        int index=0; // The index of the card in hand
+        for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in the playerHand
+            if (cardName.equals(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)){ // If cardName is the one searching for (being played)
+                index = i;
+            }
+        }
+        return wgs.getPlayerHand(wgs.getCurrentPlayer()).get(index); // Card being selected
+    }
+
     @Override
     public String toString() {
         return "Played card " + cardName;
@@ -70,7 +75,7 @@ public class PlayCard extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonder7Card)) return false;
+        if (!(o instanceof Wonders7Card)) return false;
         if (!super.equals(o)) return false;
         PlayCard playCard = (PlayCard) o;
         return Objects.equals(cardName, playCard.cardName);
