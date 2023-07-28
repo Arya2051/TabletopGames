@@ -7,7 +7,7 @@ import games.wonders7.Wonders7GameState;
 
 import java.util.*;
 
-public class Wonder7Board extends Card {
+public class Wonders7Board extends Card {
     public enum wonder {
         colossus,
 
@@ -28,11 +28,11 @@ public class Wonder7Board extends Card {
     public final wonder type;
     public boolean effectUsed;
     public int wonderStage;
-    public final HashMap<Wonders7Constants.resources, Integer> resourcesProduced; // Default wonder production
+    public final Wonders7Constants.resources resourcesProduced; // Default wonder production
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts; // Cost of each stage
     public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce; // Production of each stage
 
-    public Wonder7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce) {
+    public Wonders7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce) {
         super(type.toString());
         this.type = type;
         this.constructionCosts = new ArrayList<>();
@@ -45,45 +45,37 @@ public class Wonder7Board extends Card {
         switch (type){
             case colossus:
                 this.wonderName = "The Colossus of Rhodes          ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.ore, 1);
+                this.resourcesProduced = Wonders7Constants.resources.ore;
                 break;
             case lighthouse:
                 this.wonderName = "The Lighthouse of Alexandria    ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.glass, 1);
+                this.resourcesProduced = Wonders7Constants.resources.glass;
                 break;
             case temple:
                 this.wonderName = "The Temple of Artemis in Ephesus";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.papyrus, 1);
+                this.resourcesProduced = Wonders7Constants.resources.papyrus;
                 break;
             case gardens:
                 this.wonderName = "The Hanging Gardens of Babylon  ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.clay, 1);
+                this.resourcesProduced = Wonders7Constants.resources.clay;
                 break;
             case statue:
                 this.wonderName = "The Statue of Zeus in Olympia   ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.wood, 1);
+                this.resourcesProduced = Wonders7Constants.resources.wood;
                 break;
             case mausoleum:
                 this.wonderName = "The Mausoleum of Halicarnassus  ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.textile, 1);
+                this.resourcesProduced = Wonders7Constants.resources.textile;
                 break;
             case pyramids:
                 this.wonderName = "The Pyramids of Giza            ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.stone, 1);
+                this.resourcesProduced = Wonders7Constants.resources.stone;
                 break;
-            default: this.wonderName = ""; this.resourcesProduced = new HashMap<>();
-            break;
+            default: throw new IllegalArgumentException("Wonder does not have a type");
         }
     }
 
-    public Wonder7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce, int componentID) {
+    public Wonders7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce, int componentID) {
         super(type.toString(),componentID);
         this.type = type;
         this.constructionCosts = new ArrayList<>();
@@ -96,41 +88,33 @@ public class Wonder7Board extends Card {
         switch (type){
             case colossus:
                 this.wonderName = "The Colossus of Rhodes          ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.ore, 1);
+                this.resourcesProduced = Wonders7Constants.resources.ore;
                 break;
             case lighthouse:
                 this.wonderName = "The Lighthouse of Alexandria    ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.glass, 1);
+                this.resourcesProduced = Wonders7Constants.resources.glass;
                 break;
             case temple:
                 this.wonderName = "The Temple of Artemis in Ephesus";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.papyrus, 1);
+                this.resourcesProduced = Wonders7Constants.resources.papyrus;
                 break;
             case gardens:
                 this.wonderName = "The Hanging Gardens of Babylon  ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.clay, 1);
+                this.resourcesProduced = Wonders7Constants.resources.clay;
                 break;
             case statue:
                 this.wonderName = "The Statue of Zeus in Olympia   ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.wood, 1);
+                this.resourcesProduced = Wonders7Constants.resources.wood;
                 break;
             case mausoleum:
                 this.wonderName = "The Mausoleum of Halicarnassus  ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.textile, 1);
+                this.resourcesProduced = Wonders7Constants.resources.textile;
                 break;
             case pyramids:
                 this.wonderName = "The Pyramids of Giza            ";
-                this.resourcesProduced = new HashMap<>();
-                this.resourcesProduced.put(Wonders7Constants.resources.stone, 1);
+                this.resourcesProduced = Wonders7Constants.resources.stone;
                 break;
-            default: this.wonderName = ""; this.resourcesProduced = new HashMap<>();
-                break;
+            default: throw new IllegalArgumentException("Wonder does not have a type");
         }
     }
 
@@ -159,7 +143,7 @@ public class Wonder7Board extends Card {
             if (i != stageProduce.size()-1) stages += ", ";
         }
         return wonderName + (effectUsed ? "(used)" : "") + "[" + (wonderStage-1) + "]" +
-                ",makes=" + mapToStr(resourcesProduced) + " " + stages;
+                ",makes=" + (resourcesProduced) + " " + stages;
     }
 
     private String mapToStr(HashMap<Wonders7Constants.resources, Integer> m) {
@@ -190,8 +174,8 @@ public class Wonder7Board extends Card {
     }
 
     @Override
-    public Wonder7Board copy(){
-        Wonder7Board board =  new Wonder7Board(type, constructionCosts, stageProduce, componentID);
+    public Wonders7Board copy(){
+        Wonders7Board board =  new Wonders7Board(type, constructionCosts, stageProduce, componentID);
         board.wonderStage = wonderStage;
         board.effectUsed = effectUsed;
         return board;
@@ -199,8 +183,8 @@ public class Wonder7Board extends Card {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Wonder7Board) {
-            Wonder7Board card = (Wonder7Board) o;
+        if (o instanceof Wonders7Board) {
+            Wonders7Board card = (Wonders7Board) o;
             return card.wonderName.equals(wonderName) &&
                     card.wonderStage == wonderStage;
         }

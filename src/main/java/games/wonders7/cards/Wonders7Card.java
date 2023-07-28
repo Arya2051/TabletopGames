@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class Wonder7Card extends Card {
+public class Wonders7Card extends Card {
 
     public enum Wonder7CardType {
         RawMaterials,
@@ -39,7 +39,7 @@ public class Wonder7Card extends Card {
     public final String prerequisiteCard;
 
     // A normal card with construction cost, produces resources
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced) {
+    public Wonders7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced) {
         super(name);
         this.cardName = name;
         this.type = type;
@@ -49,7 +49,7 @@ public class Wonder7Card extends Card {
     }
 
     // Card has prerequisite cards
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard) {
+    public Wonders7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard) {
         super(name);
         this.cardName = name;
         this.type = type;
@@ -59,7 +59,7 @@ public class Wonder7Card extends Card {
     }
 
     // A free card (no construction cost)
-    public Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> resourcesProduced){
+    public Wonders7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> resourcesProduced){
         super(name);
         this.cardName = name;
         this.type = type;
@@ -69,7 +69,7 @@ public class Wonder7Card extends Card {
     }
 
 
-    protected Wonder7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard, int componentID){
+    protected Wonders7Card(String name, Wonder7CardType type, HashMap<Wonders7Constants.resources,Integer> constructionCost, HashMap<Wonders7Constants.resources,Integer> resourcesProduced, String prerequisiteCard, int componentID){
         super(name, componentID);
         this.cardName = name;
         this.type = type;
@@ -164,7 +164,7 @@ public class Wonder7Card extends Card {
     }
 
     // Checks if neighbour on the right can provide resources to build the structure
-    public boolean isPayableR(AbstractGameState gameState){
+    public boolean isBuyableR(AbstractGameState gameState){
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
         // Checks if the player has an identical structure
@@ -192,10 +192,7 @@ public class Wonder7Card extends Card {
 
         HashMap<Wonders7Constants.resources, Integer> neighbourResources = new HashMap<>(); // Resources offered by the neighbour
         // Resources provided by neighbour's wonder
-        key = wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).resourcesProduced.keySet();
-        for (Wonders7Constants.resources resource : key) {
-            neighbourResources.put(resource, wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).resourcesProduced.get(resource));
-        }
+        neighbourResources.put(wgs.getPlayerWonderBoard(((wgs.getCurrentPlayer()+1)%wgs.getNPlayers())).resourcesProduced, 1);
         // Resources provided by neighbour's raw materials
         for (int i=0;i<wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).getSize();i++){
             if ((wgs.getPlayedCards((wgs.getCurrentPlayer()+1)%wgs.getNPlayers()).get(i).type==Wonder7CardType.RawMaterials)){
@@ -234,7 +231,7 @@ public class Wonder7Card extends Card {
     }
 
     // Checks if neighbour on the left can provide resources to build the structure
-    public boolean isPayableL(AbstractGameState gameState){
+    public boolean isBuyableL(AbstractGameState gameState){
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
         // Checks if the player has an identical structure
@@ -262,10 +259,7 @@ public class Wonder7Card extends Card {
 
         HashMap<Wonders7Constants.resources, Integer> neighbourResources = new HashMap<>(); // Resources offered by the neighbour
         // Resources provided by neighbour's wonder
-        key = wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).resourcesProduced.keySet();
-        for (Wonders7Constants.resources resource : key) {
-            neighbourResources.put(resource, wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).resourcesProduced.get(resource));
-        }
+        neighbourResources.put(wgs.getPlayerWonderBoard(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).resourcesProduced, 1);
         // Resources provided by neighbour's raw materials
         for (int i=0;i<wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).getSize();i++){
             if ((wgs.getPlayedCards(Math.floorMod(wgs.getCurrentPlayer()-1, wgs.getNPlayers())).get(i).type==Wonder7CardType.RawMaterials)){
@@ -310,13 +304,13 @@ public class Wonder7Card extends Card {
 
     @Override
     public Card copy(){
-        return new Wonder7Card(cardName, type, constructionCost, resourcesProduced, prerequisiteCard, componentID);
+        return new Wonders7Card(cardName, type, constructionCost, resourcesProduced, prerequisiteCard, componentID);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Wonder7Card) {
-            Wonder7Card card = (Wonder7Card) o;
+        if (o instanceof Wonders7Card) {
+            Wonders7Card card = (Wonders7Card) o;
             return card.cardName.equals(cardName) &&
                     card.type == type;}
         return false;
