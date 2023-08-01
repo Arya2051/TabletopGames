@@ -29,16 +29,16 @@ public class Wonders7Board extends Card {
     public boolean effectUsed;
     public int wonderStage;
     public final Wonders7Constants.resources resourcesProduced; // Default wonder production
-    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts; // Cost of each stage
-    public ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce; // Production of each stage
 
-    public Wonders7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce) {
+    // 2(n-1): Stage Costs types/Resource counts    2(n-1)+1: Stage production types/Resource counts
+    public final Wonders7Constants.resources[] stageResourceTypes; // Each stage's resource types for cost and productions
+    public final int[] stageResourceCounts; // Each stage's resource counts for cost and productions
+
+    public Wonders7Board(wonder type, Wonders7Constants.resources[] stageResourceTypes, int[] stageResourceCounts) {
         super(type.toString());
         this.type = type;
-        this.constructionCosts = new ArrayList<>();
-        this.stageProduce = new ArrayList<>();
-        for (HashMap<Wonders7Constants.resources, Integer> cost : constructionCosts){this.constructionCosts.add(cost);}
-        for (HashMap<Wonders7Constants.resources, Integer> produce : stageProduce){this.stageProduce.add(produce);}
+        this.stageResourceTypes = stageResourceTypes;
+        this.stageResourceCounts = stageResourceCounts;
         this.wonderStage = 1;
         this.effectUsed = true;
 
@@ -75,13 +75,11 @@ public class Wonders7Board extends Card {
         }
     }
 
-    public Wonders7Board(wonder type, ArrayList<HashMap<Wonders7Constants.resources, Integer>> constructionCosts, ArrayList<HashMap<Wonders7Constants.resources, Integer>> stageProduce, int componentID) {
+    public Wonders7Board(wonder type, Wonders7Constants.resources[] stageResourceTypes, int[] stageResourceCounts, int componentID) {
         super(type.toString(),componentID);
         this.type = type;
-        this.constructionCosts = new ArrayList<>();
-        this.stageProduce = new ArrayList<>();
-        for (HashMap<Wonders7Constants.resources, Integer> cost : constructionCosts){this.constructionCosts.add(cost);}
-        for (HashMap<Wonders7Constants.resources, Integer> produce : stageProduce){this.stageProduce.add(produce);}
+        this.stageResourceTypes = stageResourceTypes;
+        this.stageResourceCounts = stageResourceCounts;
         this.wonderStage = 1;
         this.effectUsed = true;
 
@@ -136,11 +134,11 @@ public class Wonders7Board extends Card {
     @Override
     public String toString() {
         String stages = "";
-        for (int i = 0; i < stageProduce.size(); i++) {
-            String cost = mapToStr(constructionCosts.get(i));
-            String makes = mapToStr(stageProduce.get(i));
+        for (int i = 0; i < 3; i++) {
+            String cost = stageResourceTypes[2*i] + "="+ stageResourceCounts[2*i];
+            String makes = stageResourceTypes[2*i+1] + "="+ stageResourceCounts[2*i+1];
             stages += "{" + (i+1) + ":" + (!cost.equals("") ? "cost=" + cost : "free")  + (!cost.equals("") && !makes.equals("")?"," : "") + (!makes.equals("")? "makes=" + makes : "") + "}  ";
-            if (i != stageProduce.size()-1) stages += ", ";
+            if (i != stageResourceCounts.length-1) stages += ", ";
         }
         return wonderName + (effectUsed ? "(used)" : "") + "[" + (wonderStage-1) + "]" +
                 ",makes=" + (resourcesProduced) + " " + stages;
@@ -160,13 +158,8 @@ public class Wonders7Board extends Card {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         if (wonderStage == 4){return false;}
         // Checks if player can afford the cost of the card
-        Set<Wonders7Constants.resources> key = constructionCosts.get(wonderStage-1).keySet(); //Gets the resources of the player
-        for (Wonders7Constants.resources resource : key) {// Goes through every resource the player has
-            if (!((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) >= constructionCosts.get(wonderStage-1).get(resource))) { // Checks if players resource count is more or equal to card resource count (i.e. the player can afford the card)
-                return false; // Player cant afford card
-            }
-        }
-        return true;
+        // Checks if players resource count is more or equal to stage resource count (i.e. the player can afford the card)
+        return (wgs.getPlayerResources(wgs.getCurrentPlayer()).get(stageResourceTypes[2 * (wonderStage - 1)])) >= stageResourceCounts[2 * (wonderStage - 1)]; // Player cant afford card
     }
 
     public void changeStage(){
@@ -175,7 +168,7 @@ public class Wonders7Board extends Card {
 
     @Override
     public Wonders7Board copy(){
-        Wonders7Board board =  new Wonders7Board(type, constructionCosts, stageProduce, componentID);
+        Wonders7Board board =  new Wonders7Board(type, stageResourceTypes, stageResourceCounts,componentID);
         board.wonderStage = wonderStage;
         board.effectUsed = effectUsed;
         return board;
