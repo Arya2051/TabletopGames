@@ -81,7 +81,7 @@ public class SpecialEffect extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonders7Card)) return false;
+        if (!(o instanceof SpecialEffect)) return false;
         if (!super.equals(o)) return false;
         SpecialEffect specialEffect = (SpecialEffect) o;
         return Objects.equals(cardName, specialEffect.cardName);

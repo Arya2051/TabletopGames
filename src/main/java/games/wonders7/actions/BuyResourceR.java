@@ -88,7 +88,7 @@ public class BuyResourceR extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonders7Card)) return false;
+        if (!(o instanceof BuyResourceR)) return false;
         if (!super.equals(o)) return false;
         BuyResourceR buyResourceR = (BuyResourceR) o;
         return Objects.equals(cardName, buyResourceR.cardName);

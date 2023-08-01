@@ -75,7 +75,7 @@ public class PlayCard extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonders7Card)) return false;
+        if (!(o instanceof PlayCard)) return false;
         if (!super.equals(o)) return false;
         PlayCard playCard = (PlayCard) o;
         return Objects.equals(cardName, playCard.cardName);

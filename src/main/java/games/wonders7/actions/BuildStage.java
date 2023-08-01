@@ -43,12 +43,10 @@ public class BuildStage extends DrawCard {
 
 
         // Gives player resources produced from stage
-        Set<Wonders7Constants.resources> keys = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).keySet(); // Gets all the resources the stage provides
-        for (Wonders7Constants.resources resource: keys){  // Goes through all keys for each resource
-            int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageProduce.get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1).get(resource); // Number of resource the stage provides
-            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource); // Number of resource the player owns
-            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(resource, playerValue + stageValue); // Adds the resources provided by the stage to the players resource count
-        }
+        int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceCounts[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1]; // Number of resource the stage provides
+        int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1]); // Number of resource the player owns
+        wgs.getPlayerResources(wgs.getCurrentPlayer()).put(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1], playerValue + stageValue); // Adds the resources provided by the stage to the players resource count
+
 
         // remove the card from the players hand to the playedDeck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);
@@ -77,7 +75,7 @@ public class BuildStage extends DrawCard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Wonders7Card)) return false;
+        if (!(o instanceof BuildStage)) return false;
         if (!super.equals(o)) return false;
         BuildStage buildStage = (BuildStage) o;
         return Objects.equals(cardName, buildStage.cardName) &&
