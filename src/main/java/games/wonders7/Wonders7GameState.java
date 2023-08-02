@@ -198,7 +198,7 @@ public class Wonders7GameState extends AbstractGameState {
     }
 
 
-    public int countBuiltWonderStages(int playerId) {
+    public double countBuiltWonderStages() {
         Deck<Wonders7Board> allBoards;
         allBoards = new Deck<>("temp", VISIBLE_TO_ALL);
         for (int i=0; i<getNPlayers(); i++) allBoards.add(playerWonderBoard[i]);
@@ -208,14 +208,14 @@ public class Wonders7GameState extends AbstractGameState {
                 .mapToInt(board -> board.getWonderStage() - 1) // WonderStage starts value at 1
                 .sum();
 
-        return totalWonderStages;
+        return (double) totalWonderStages/getNPlayers();
     }
 
-    public int nCardsOfType(Wonders7Card.Wonder7CardType type, int playerId) {
+    public double nCardsOfType(Wonders7Card.Wonder7CardType type, int playerId) {
         Deck<Wonders7Card> allCards;
         allCards = new Deck<>("temp", VISIBLE_TO_ALL);
         for (int i=0; i<getNPlayers(); i++) {allCards.add(getPlayedCards(i));}
-        return (int) allCards.stream().filter(c -> c.getCardType() == type).count(); // Counts all the cards (of type) that have been played in the current gs
+        return (double) allCards.stream().filter(c -> c.getCardType() == type).count()/getNPlayers(); // Counts all the cards (of type) that have been played in the current gs
     }
 
     public int getCurrentAge() {
