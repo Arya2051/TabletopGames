@@ -128,7 +128,7 @@ public class Wonders7Card extends Card {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         // Checks if the player has an identical structure
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(cardName)){
                 return false;
             }
         }
@@ -149,7 +149,7 @@ public class Wonders7Card extends Card {
 
         // Checks if the player has an identical structure
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(cardName)){
                 return false;
             }
         }
@@ -169,7 +169,7 @@ public class Wonders7Card extends Card {
 
         // Checks if the player has an identical structure
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(cardName)){
                 return false;
             }
         }
@@ -182,6 +182,8 @@ public class Wonders7Card extends Card {
                 neededResources.put(resource, constructionCost.get(resource)-wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource));
             }
         }
+        if (neededResources.isEmpty() || wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.coin)<2){return false;} // If player does not require resources or can afford one resource unit
+
         // Calculates the cost of resources
         int coinCost=0;
         key = neededResources.keySet();
@@ -236,7 +238,7 @@ public class Wonders7Card extends Card {
 
         // Checks if the player has an identical structure
         for (int i=0;i<wgs.getPlayedCards(wgs.getCurrentPlayer()).getSize();i++){
-            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName == cardName){
+            if(wgs.getPlayedCards(wgs.getCurrentPlayer()).get(i).cardName.equals(cardName)){
                 return false;
             }
         }
@@ -249,6 +251,8 @@ public class Wonders7Card extends Card {
                 neededResources.put(resource, constructionCost.get(resource)-wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource));
             }
         }
+        if (neededResources.isEmpty() || wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.coin)<2){return false;} // If player does not require resources or can afford one resource unit
+
         // Calculates the cost of resources
         int coinCost=0;
         key = neededResources.keySet();
@@ -298,8 +302,7 @@ public class Wonders7Card extends Card {
     }
 
     public HashMap<Wonders7Constants.resources, Integer> empty(){
-        HashMap<Wonders7Constants.resources, Integer> empty = new HashMap<>();
-        return empty;
+        return new HashMap<>();
     }
 
     @Override

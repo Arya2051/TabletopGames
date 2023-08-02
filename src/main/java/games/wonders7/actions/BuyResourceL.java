@@ -31,7 +31,7 @@ public class BuyResourceL extends DrawCard {
         Wonders7Card card = findCard(wgs); // Card being selected
 
         // Collects the resources player does not have
-        Set<Wonders7Constants.resources> key = card.constructionCost.keySet();
+        Set<Wonders7Constants.resources> key = card.constructionCost.keySet(); // Cost for card
         HashMap<Wonders7Constants.resources, Integer> neededResources = new HashMap<>();
         for (Wonders7Constants.resources resource : key) { // Goes through every resource the player needs
             if ((wgs.getPlayerResources(wgs.getCurrentPlayer()).get(resource)) < card.constructionCost.get(resource)) { // If the player does not have resource count, added to needed resources
