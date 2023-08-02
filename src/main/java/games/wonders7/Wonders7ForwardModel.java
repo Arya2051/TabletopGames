@@ -139,7 +139,9 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         ArrayList<AbstractAction> actions = new ArrayList<>();
         // If player has the prerequisite card/enough resources/the card is free/the player can pay for the resources to play the card
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
-            
+
+            if (checkForAction(actions, wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)) {continue;} // Prevents repeat actions
+
             if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isFree(wgs)){ // Checks if player has prerequisite card to build card for free
                 actions.add(new FreeCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
             }
@@ -171,7 +173,14 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         //System.out.println("LIST OF ACTIONS FOR CURRENT PLAYER: "+actions);
         return actions;
     }
-
+    private boolean checkForAction(ArrayList<AbstractAction> actions, String cardName) {
+        for (AbstractAction action : actions) {
+            if (action instanceof DiscardCard && ((DiscardCard) action).cardName.equals(cardName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     protected AbstractForwardModel _copy() {
         // In the _copy() method, return a new instance of the Forward Model object with any variables copied.
@@ -182,6 +191,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         // Create all the possible wonders a player could be assigned
         Wonders7Constants.resources[] colossusResourceTypes = {Wonders7Constants.resources.wood, Wonders7Constants.resources.victory, Wonders7Constants.resources.clay, Wonders7Constants.resources.shield, Wonders7Constants.resources.ore, Wonders7Constants.resources.victory};
         int[] colossusResourceCounts = {2,3,3,2,4,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
