@@ -139,7 +139,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         ArrayList<AbstractAction> actions = new ArrayList<>();
         // If player has the prerequisite card/enough resources/the card is free/the player can pay for the resources to play the card
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
-
+            
             if (wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).isFree(wgs)){ // Checks if player has prerequisite card to build card for free
                 actions.add(new FreeCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
             }
