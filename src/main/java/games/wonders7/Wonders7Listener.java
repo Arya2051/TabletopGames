@@ -22,32 +22,35 @@ import static core.CoreConstants.GameEvents.*;
 public class Wonders7Listener implements IGameListener {
 
     IStatisticLogger logger;
+    IGameAttribute[] attributesToRecord;
+
+    @Override
+    public void allGamesFinished() {
+        logger.processDataAndFinish();
+    }
 
     public Wonders7Listener(IStatisticLogger logger) {
+        this(logger, Wonders7Attributes.values());
+    }
+
+    public Wonders7Listener(IStatisticLogger logger, IGameAttribute... attributes) {
         this.logger = logger;
+        this.attributesToRecord = attributes;
     }
 
     @Override
     public void onGameEvent(CoreConstants.GameEvents type, Game game) {
-        //if (type == ACTION_TAKEN || type == GAME_OVER) {
-        //    AbstractGameState state = game.getGameState();
-        //    Map<String, Object> data = Arrays.stream(Wonders7Attributes.values())
-        //            .collect(Collectors.toMap(IGameAttribute::name, attr -> attr.get(state, null)));
-        //    logger.record(data);
-        //}
-    }
-
-    @Override
-    public void onEvent(CoreConstants.GameEvents type, AbstractGameState state, AbstractAction action) {
+        // Here we do nothing, as we are only interested in Action events
         if (type == GAME_OVER) {
-            Map<String, Object> data = Arrays.stream(Wonders7Attributes.values())
+            Wonders7GameState state = (Wonders7GameState) game.getGameState();
+            Map<String, Object> data = Arrays.stream(attributesToRecord)
                     .collect(Collectors.toMap(IGameAttribute::name, attr -> attr.get(state, null)));
             logger.record(data);
         }
     }
 
     @Override
-    public void allGamesFinished() {
-        logger.processDataAndFinish();
+    public void onEvent(CoreConstants.GameEvents type, AbstractGameState state, AbstractAction action) {
+
     }
 }

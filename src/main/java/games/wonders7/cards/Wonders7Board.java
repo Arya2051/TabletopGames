@@ -165,6 +165,7 @@ public class Wonders7Board extends Card {
     public void changeStage(){
         wonderStage +=1;
     }
+    public int getWonderStage() {return wonderStage;}
 
     @Override
     public Wonders7Board copy(){

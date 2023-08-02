@@ -198,19 +198,23 @@ public class Wonders7GameState extends AbstractGameState {
     }
 
 
-    public int countBuiltWonderStages(int playerId){
+    public int countBuiltWonderStages(int playerId) {
         Deck<Wonders7Board> allBoards;
         allBoards = new Deck<>("temp", VISIBLE_TO_ALL);
-        allBoards.add(playerWonderBoard[playerId]);
-        return allBoards.stream()
-                .mapToInt(c -> c.wonderStage - 1) // Subtract 1 to count individual wonder stages
+        for (int i=0; i<getNPlayers(); i++) allBoards.add(playerWonderBoard[i]);
+
+        // Use stream to get the sum of all BuildStage's in the wgs
+        int totalWonderStages = allBoards.stream()
+                .mapToInt(board -> board.getWonderStage() - 1) // WonderStage starts value at 1
                 .sum();
+
+        return totalWonderStages;
     }
 
     public int nCardsOfType(Wonders7Card.Wonder7CardType type, int playerId) {
         Deck<Wonders7Card> allCards;
         allCards = new Deck<>("temp", VISIBLE_TO_ALL);
-        allCards.add(getPlayedCards(playerId));
+        for (int i=0; i<getNPlayers(); i++) {allCards.add(getPlayedCards(i));}
         return (int) allCards.stream().filter(c -> c.getCardType() == type).count(); // Counts all the cards (of type) that have been played in the current gs
     }
 
