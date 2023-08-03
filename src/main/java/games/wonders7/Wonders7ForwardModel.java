@@ -59,7 +59,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         // Sets up the age
         createAgeDeck(wgs); // Fills Age1 deck with cards
         wgs.AgeDeck.shuffle(r);
-        System.out.println("ALL THE CARDS IN THE GAME: "+wgs.AgeDeck.getSize());
+        //System.out.println("ALL THE CARDS IN THE GAME: "+wgs.AgeDeck.getSize());
 
         // Give each player their 7 cards
         for (int player=0; player < wgs.getNPlayers(); player++){
@@ -75,7 +75,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     public void _next(AbstractGameState state, AbstractAction action){
         Wonders7GameState wgs = (Wonders7GameState) state;
 
-        // Prints players hands and the sizes
+        /*/ Prints players hands and the sizes
          if (wgs.getCurrentPlayer() ==0 && wgs.getTurnAction(0)==null){
              System.out.println("Players resource counts and hands: ");
              for (int i = 0; i < wgs.getNPlayers(); i++) {
@@ -90,30 +90,31 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             //System.out.println("ACTION ROUND STARTED");
             for (int i = 0; i < wgs.getNPlayers(); i++) {
                 wgs.getTurnOrder().setTurnOwner(i); // Current player is now player i, so they can complete their action
-                System.out.println("PLAYER " + wgs.getCurrentPlayer() + " PLAYED: " + wgs.getTurnAction(wgs.getCurrentPlayer()).toString()); // SAYS WHAT ACTION PLAYER i CHOSE!
+                //System.out.println("PLAYER " + wgs.getCurrentPlayer() + " PLAYED: " + wgs.getTurnAction(wgs.getCurrentPlayer()).toString()); // SAYS WHAT ACTION PLAYER i CHOSE!
                 wgs.getTurnAction(wgs.getCurrentPlayer()).execute(wgs); // Execute the action
                 wgs.setTurnAction(wgs.getCurrentPlayer(), null); // Remove the action
             }
-            System.out.println("--------------------------------------------------------------------                                          ");
+            //System.out.println("--------------------------------------------------------------------                                          ");
             wgs.getTurnOrder().setTurnOwner(0); // Resets turn owner to player 0
 
             // Player hands rotated around each player
-             Deck<Wonders7Card> temp = wgs.getPlayerHands().get(0); // Stores the first player's action
-             if (((Wonders7TurnOrder) wgs.getTurnOrder()).getDirection() == 1) { // If clockwise
+            Deck<Wonders7Card> temp = wgs.getPlayerHands().get(0); // Stores the first player's action
+            if (((Wonders7TurnOrder) wgs.getTurnOrder()).getDirection() == 1) { // If clockwise
                  for (int i = 0; i < wgs.getNPlayers(); i++) {
                      if (i == wgs.getNPlayers()-1) {wgs.getPlayerHands().set(i, temp);} // makes sure the last player receives first players original hand
                      else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i+1));} // Rotates hands clockwise
                  }
-             }
-             else { // If anticlockwise
-                 temp = wgs.getPlayerHand((wgs.getNPlayers()-1)% wgs.getNPlayers()); // Stores the last player's action
-                 for (int i = (wgs.getNPlayers()-1)% wgs.getNPlayers(); i >-1; i--) {
-                     if (i% wgs.getNPlayers() == 0) {wgs.getPlayerHands().set(i, temp);} // makes sure the first player receives last players original hand
-                     else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i-1));} // Rotates hands anticlockwise
-                 }
-             }
-             System.out.println("ROTATING HANDS!!!!!");
-             checkAgeEnd(wgs); // Check for Age end;
+            }
+            else { // If anticlockwise
+                temp = wgs.getPlayerHand((wgs.getNPlayers()-1)% wgs.getNPlayers()); // Stores the last player's action
+                for (int i = (wgs.getNPlayers()-1)% wgs.getNPlayers(); i >-1; i--) {
+                    if (i% wgs.getNPlayers() == 0) {wgs.getPlayerHands().set(i, temp);} // makes sure the first player receives last players original hand
+                    else {wgs.getPlayerHands().set(i, wgs.getPlayerHands().get(i-1));} // Rotates hands anticlockwise
+                }
+            }
+            //System.out.println("ROTATING HANDS!!!!!");
+
+            checkAgeEnd(wgs); // Check for Age end;
 
          }
         // Selection round: Players choose actions
@@ -161,13 +162,17 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).isPlayable(wgs)){ // Checks if player can afford to build stage
                 actions.add(new BuildStage(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName, wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage));
             }
-            if ((!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed)){ // Checks if player is able to use wonder special ability
+            if ((!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed) && wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.statue){ // Checks if player is able to use statue wonder special ability
                 actions.add(new SpecialEffect(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
             }
             actions.add(new DiscardCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); // Card can always be discarded
         }
 
-
+        for (int i=0; i<wgs.getDiscardPile().getSize(); i++){
+            if ((!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed) && wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.mausoleum){ // Checks if player is able to use statue mausoleum special ability
+                actions.add(new SpecialEffect(wgs.getDiscardPile().get(i).cardName));
+            }
+        }
         //System.out.println(wgs.getPlayerHand(wgs.getCurrentPlayer()));
         //System.out.println(wgs.getCurrentPlayer());
         //System.out.println("LIST OF ACTIONS FOR CURRENT PLAYER: "+actions);
@@ -192,10 +197,21 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         Wonders7Constants.resources[] colossusResourceTypes = {Wonders7Constants.resources.wood, Wonders7Constants.resources.victory, Wonders7Constants.resources.clay, Wonders7Constants.resources.shield, Wonders7Constants.resources.ore, Wonders7Constants.resources.victory};
         int[] colossusResourceCounts = {2,3,3,2,4,7};
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
+        Wonders7Constants.resources[] templeResourceTypes = {Wonders7Constants.resources.stone, Wonders7Constants.resources.victory, Wonders7Constants.resources.wood, Wonders7Constants.resources.coin, Wonders7Constants.resources.papyrus, Wonders7Constants.resources.victory};
+        int[] templeResourceCounts = {2,3,2,9,2,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.temple, templeResourceTypes, templeResourceCounts));
+
+        Wonders7Constants.resources[] statueResourceTypes = {Wonders7Constants.resources.wood, Wonders7Constants.resources.victory, Wonders7Constants.resources.stone, null,Wonders7Constants.resources.ore, Wonders7Constants.resources.victory};
+        int[] statueResourceCounts = {2,3,2,0,2,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.statue, statueResourceTypes, statueResourceCounts));
+
+        Wonders7Constants.resources[] mausoleumResourceTypes = {Wonders7Constants.resources.clay, Wonders7Constants.resources.victory, Wonders7Constants.resources.ore, null, Wonders7Constants.resources.textile, Wonders7Constants.resources.victory};
+        int[] mausoleumResourceCounts = {2,3,3,0,3,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.mausoleum, mausoleumResourceTypes, mausoleumResourceCounts));
+
+        Wonders7Constants.resources[] pyramidsResourceTypes = {Wonders7Constants.resources.stone, Wonders7Constants.resources.victory, Wonders7Constants.resources.wood, Wonders7Constants.resources.victory, Wonders7Constants.resources.stone, Wonders7Constants.resources.victory};
+        int[] pyramidsResourceCounts = {2,3,3,5,4,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.pyramids, pyramidsResourceTypes, pyramidsResourceCounts));
 
         //.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
         /*/
@@ -434,14 +450,14 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             }
 
             wgs.setGameStatus(Utils.GameResult.GAME_END);
-            //System.out.println("");
+            /*/System.out.println("");
             System.out.println("!---------------------------------------- THE FINAL AGE HAS ENDED!!! ----------------------------------------!");
             System.out.println("");
             System.out.println("The winner is Player  " + winner +"!!!!");
             //*/
         }
         else{
-            //
+            /*/
             System.out.println("");
             System.out.println("!---------------------------------------- AGE "+wgs.currentAge+" HAS NOW STARTED!!!!! ----------------------------------------!");
             System.out.println("");
@@ -470,10 +486,10 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
     protected void endGame(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
 
-        //
+        /*/
         System.out.println("");
         for (int i = 0; i < wgs.getNPlayers(); i++) {
-            System.out.println("PLAYER: "+ i + " "+ wgs.getPlayerWonderBoard(i).wonderName+" STAGE: ["+(wgs.getPlayerWonderBoard(i).wonderStage-1) +"] " + " --> " + wgs.getPlayerResources(i) + " --PLAYED CARDS--> " + wgs.getPlayedCards(i));
+            System.out.println("PLAYER: "+ i + " "+ wgs.getPlayerWonderBoard(i).wonderName+" STAGE: ["+(wgs.getPlayerWonderBoard(i).wonderStage-1) +"] " + " --> " + wgs.getPlayerResources(i) + " --PLAYED ["+wgs.getPlayedCards(i).getSize()+"] CARDS--> " + wgs.getPlayedCards(i));
         }
 
          //*/

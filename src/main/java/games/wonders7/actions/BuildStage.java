@@ -43,10 +43,11 @@ public class BuildStage extends DrawCard {
 
 
         // Gives player resources produced from stage
-        int stageValue =  wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceCounts[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1]; // Number of resource the stage provides
-        int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1]); // Number of resource the player owns
-        wgs.getPlayerResources(wgs.getCurrentPlayer()).put(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2*(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage-1)+1], playerValue + stageValue); // Adds the resources provided by the stage to the players resource count
-
+        if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2 * (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage - 1) + 1] != null) {
+            int stageValue = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceCounts[2 * (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage - 1) + 1]; // Number of resource the stage provides
+            int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2 * (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage - 1) + 1]); // Number of resource the player owns
+            wgs.getPlayerResources(wgs.getCurrentPlayer()).put(wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).stageResourceTypes[2 * (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage - 1) + 1], playerValue + stageValue); // Adds the resources provided by the stage to the players resource count
+        }
 
         // remove the card from the players hand to the playedDeck
         wgs.getPlayerHand(wgs.getCurrentPlayer()).remove(card);

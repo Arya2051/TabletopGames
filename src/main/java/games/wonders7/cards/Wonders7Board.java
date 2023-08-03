@@ -157,9 +157,7 @@ public class Wonders7Board extends Card {
     public boolean isPlayable(AbstractGameState gameState) {
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         if (wonderStage == 4){return false;}
-        // Checks if player can afford the cost of the card
-        // Checks if players resource count is more or equal to stage resource count (i.e. the player can afford the card)
-        return (wgs.getPlayerResources(wgs.getCurrentPlayer()).get(stageResourceTypes[2 * (wonderStage - 1)])) >= stageResourceCounts[2 * (wonderStage - 1)]; // Player cant afford card
+        return (wgs.getPlayerResources(wgs.getCurrentPlayer()).get(stageResourceTypes[2 * (wonderStage - 1)])) >= stageResourceCounts[2 * (wonderStage - 1)]; // Check if player can afford to build stage
     }
 
     public void changeStage(){
