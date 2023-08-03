@@ -34,6 +34,23 @@ public class SpecialEffect extends DrawCard {
 
         Wonders7Board board = wgs.getPlayerWonderBoard(wgs.getCurrentPlayer());
         switch (board.type){
+            case gardens:
+                // Player chooses between choice of 3 scientific materials
+                if (cardName.equals("Tablet")) {
+                    int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.tablet); // Number of resource the player owns
+                    wgs.getPlayerResources(wgs.getCurrentPlayer()).put(Wonders7Constants.resources.tablet, playerValue + 1);
+                }
+                if (cardName.equals("Compass")) {
+                    int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.compass); // Number of resource the player owns
+                    wgs.getPlayerResources(wgs.getCurrentPlayer()).put(Wonders7Constants.resources.compass, playerValue + 1);
+                }
+                if (cardName.equals("Cog")) {
+                    int playerValue = wgs.getPlayerResources(wgs.getCurrentPlayer()).get(Wonders7Constants.resources.cog); // Number of resource the player owns
+                    wgs.getPlayerResources(wgs.getCurrentPlayer()).put(Wonders7Constants.resources.cog, playerValue + 1);
+                }
+
+                wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed = true;
+                return true;
             case mausoleum:
                 // Gives player resources produced from card
                 Set<Wonders7Constants.resources> keys1 = discardedCard.resourcesProduced.keySet(); // Gets all the resources the card provides

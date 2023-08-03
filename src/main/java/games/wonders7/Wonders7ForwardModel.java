@@ -85,6 +85,11 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
          }
          //*/
 
+        if (wgs.getPlayerHand(0).getSize()==1){
+            //System.out.println("PLAYER " + wgs.getCurrentPlayer() + " PLAYED: " + action.toString()); // What scientific material gardens of babylon player has chosen
+            action.execute(wgs);
+            checkAgeEnd(wgs); // Checks if the game has ended!
+        }
         // Action round: Everyone plays their chosen cards
         if (checkActionRound(wgs)) {
             //System.out.println("ACTION ROUND STARTED");
@@ -113,9 +118,18 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                 }
             }
             //System.out.println("ROTATING HANDS!!!!!");
-
-            checkAgeEnd(wgs); // Check for Age end;
-
+            if (wgs.currentAge!=3) {checkAgeEnd(wgs);}
+            else{
+                boolean check = false;
+                for (int player=0; player < wgs.getNPlayers(); player++){
+                    if (wgs.getPlayerWonderBoard(player).type == Wonders7Board.wonder.gardens&&wgs.getPlayerWonderBoard(player).wonderStage > 2){
+                        wgs.getTurnOrder().setTurnOwner(player);
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check) {checkAgeEnd(wgs);}
+            }
          }
         // Selection round: Players choose actions
         else if (!checkActionRound(wgs)){ // Checks if every player has chosen an action
@@ -138,8 +152,17 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         //System.out.println("COMPUTED AVAILABLE ACTIONS");
         Wonders7GameState wgs = (Wonders7GameState) gameState;
         ArrayList<AbstractAction> actions = new ArrayList<>();
-        // If player has the prerequisite card/enough resources/the card is free/the player can pay for the resources to play the card
+        // If player has the prerequisite card/enough resources/the card is free/the player can pay for the resources to play the card/all discarded cards
         for (int i=0; i<wgs.getPlayerHand(wgs.getCurrentPlayer()).getSize(); i++){ // Goes through each card in hand
+
+            // For special case of gardens wonder special ability
+            if (wgs.getPlayerHand(0).getSize()==1 && wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.gardens && (!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed)){ // Checks if player is able to use gardens wonder special ability at the end of the game
+                actions.add(new SpecialEffect("Tablet"));
+                actions.add(new SpecialEffect("Compass"));
+                actions.add(new SpecialEffect("Cog"));
+                return actions;
+            }
+
 
             if (checkForAction(actions, wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)) {continue;} // Prevents repeat actions
 
@@ -162,17 +185,19 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
             if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).isPlayable(wgs)){ // Checks if player can afford to build stage
                 actions.add(new BuildStage(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName, wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).wonderStage));
             }
-            if ((!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed) && wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.statue){ // Checks if player is able to use statue wonder special ability
+            if (wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.statue && (!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed)){ // Checks if player is able to use statue wonder special ability
                 actions.add(new SpecialEffect(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName));
             }
             actions.add(new DiscardCard(wgs.getPlayerHand(wgs.getCurrentPlayer()).get(i).cardName)); // Card can always be discarded
         }
 
+        // For special case of mausoleum wonder special ability
         for (int i=0; i<wgs.getDiscardPile().getSize(); i++){
             if ((!wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).effectUsed) && wgs.getPlayerWonderBoard(wgs.getCurrentPlayer()).type == Wonders7Board.wonder.mausoleum){ // Checks if player is able to use statue mausoleum special ability
                 actions.add(new SpecialEffect(wgs.getDiscardPile().get(i).cardName));
             }
         }
+
         //System.out.println(wgs.getPlayerHand(wgs.getCurrentPlayer()));
         //System.out.println(wgs.getCurrentPlayer());
         //System.out.println("LIST OF ACTIONS FOR CURRENT PLAYER: "+actions);
@@ -197,6 +222,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         Wonders7Constants.resources[] colossusResourceTypes = {Wonders7Constants.resources.wood, Wonders7Constants.resources.victory, Wonders7Constants.resources.clay, Wonders7Constants.resources.shield, Wonders7Constants.resources.ore, Wonders7Constants.resources.victory};
         int[] colossusResourceCounts = {2,3,3,2,4,7};
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, colossusResourceTypes, colossusResourceCounts));
+
         Wonders7Constants.resources[] templeResourceTypes = {Wonders7Constants.resources.stone, Wonders7Constants.resources.victory, Wonders7Constants.resources.wood, Wonders7Constants.resources.coin, Wonders7Constants.resources.papyrus, Wonders7Constants.resources.victory};
         int[] templeResourceCounts = {2,3,2,9,2,7};
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.temple, templeResourceTypes, templeResourceCounts));
@@ -213,19 +239,9 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
         int[] pyramidsResourceCounts = {2,3,3,5,4,7};
         wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.pyramids, pyramidsResourceTypes, pyramidsResourceCounts));
 
-        //.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.lighthouse));
-        /*/
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.temple, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.coin}, new int[]{9}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.pyramids, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{4})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{5}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.statue, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{}, new int[]{}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        //wgs.wonderBoardDeck.add(new Wonder7Board(Wonder7Board.wonder.mausoleum, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.clay}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{4}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.textile}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{}, new int[]{}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.colossus, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.clay}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{4})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.shield}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.temple, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.papyrus}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.coin}, new int[]{9}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.pyramids, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{4})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{5}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.statue, createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.wood}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.stone}, new int[]{2}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.ore}, new int[]{2})), createHashList(createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{3}), createCardHash(new Wonders7Constants.resources[]{}, new int[]{}), createCardHash(new Wonders7Constants.resources[]{Wonders7Constants.resources.victory}, new int[]{7}))));
-        */
-
+        Wonders7Constants.resources[] gardensResourceTypes = {Wonders7Constants.resources.clay, Wonders7Constants.resources.victory, Wonders7Constants.resources.wood, null,Wonders7Constants.resources.clay, Wonders7Constants.resources.victory};
+        int[] gardensResourceCounts = {2,3,3,0,4,7};
+        wgs.wonderBoardDeck.add(new Wonders7Board(Wonders7Board.wonder.gardens, gardensResourceTypes, gardensResourceCounts));
     }
 
 
@@ -407,7 +423,7 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
 
             wgs.getAgeDeck().clear();
             wgs.currentAge += 1; // Next age starts
-            checkGameEnd(wgs); // Checks if the game has ended!
+            checkGameEnd(wgs);
         }
 
     }
@@ -471,7 +487,6 @@ public class Wonders7ForwardModel extends AbstractForwardModel {
                     switch (board.type){
                         case lighthouse:
                         case mausoleum:
-                        case gardens:
                         case statue:
                             wgs.getPlayerWonderBoard(player).effectUsed = false;
                         default:
